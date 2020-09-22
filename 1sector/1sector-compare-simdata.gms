@@ -48,7 +48,7 @@ Set
 Parameters
 series(ttot,name)
 
-$gdxIn SimGrowthMaliar_Method6_D2.gdx
+$gdxIn SimGrowthMaliar_low.gdx
 $LOAD series
 $GDXIN
 
@@ -316,7 +316,7 @@ alphaksv("1")   = 0.2 ;
 alphaksv("2")   = 0.4 ;
 alphaksv("3")   = 0.6 ;
 gammasv("1")    = 0.1 ;
-gammasv("2")    = 2;
+gammasv("2")    = 1.8;
 gammasv("3")    = 4 ;
 deltasv("1")    = 0.01 ;
 deltasv("2")    = 0.05 ;
@@ -363,7 +363,7 @@ err0("1")=-2.8570; err0("2")=-1.3556; err0("3")=0;  err0("4")=1.3556; err0("5")=
 prob("1")=0.0113; prob("2")=0.2221; prob("3")=0.5333; prob("4")=0.2221; prob("5")=0.0113;
 
 z0(nz) = err0(nz)*sigmazsv("2") ;
-*z0(nz) = gq(nz)*0.1 ;
+
 
 Parameters
 kbar
@@ -594,12 +594,12 @@ solve estimation using nlp maximising entropie;
 *smol(nka,nza) = 1 ;
 *solve estimation using nlp maximising entropie;
 
-erreulersv("1")         = -0.1*(sum(t, cs(t))/card(t) );
-erreulersv("3")         = 0.1*(sum(t, cs(t))/card(t) );
-erreulernesv("1")       = -0.1*(sum(t, cs(t))/card(t) );
-erreulernesv("3")       = 0.1*(sum(t, cs(t))/card(t) );
+erreulersv("1")         = -0.05*(sum(t, cs(t))/card(t) );
+erreulersv("3")         = 0.05*(sum(t, cs(t))/card(t) );
+erreulernesv("1")       = -0.05*(sum(t, cs(t))/card(t) );
+erreulernesv("3")       = 0.05*(sum(t, cs(t))/card(t) );
 
-smol(nka,nza) = 1 ;
+*smol(nka,nza) = 1 ;
 solve estimation using nlp maximising entropie;
 
 *execute_unload '1sector_compare.gdx';
