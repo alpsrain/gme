@@ -638,6 +638,23 @@ betaemse = (power((betaem-beta_true),2)+betaestd**2)**0.5;
 rhozemse = (power((rhozem-rho_true),2)+rhozestd**2)**0.5;
 sigmazemse = (power((sigmazem-sigma_true),2)+sigmazestd**2)**0.5;
 
+parameters
+alphakebias
+gammaebias
+betaebias
+deltaebias
+rhozebias
+sigmazebias
+;
+
+alphakebias = (alphakem-alphak_true)/alphak_true;
+gammaebias = (gammaem-gamma_true)/gamma_true;
+betaebias = (betaem-beta_true)/beta_true;
+deltaebias = (deltaem-delta_true)/delta_true;
+rhozebias = (rhozem-rho_true)/rho_true;
+sigmazebias = (sigmazem-sigma_true)/sigma_true;
+
+
 display alphakem, alphakestd, alphakemse ;
 display gammaem, gammaestd, gammaemse ;
 display deltaem, deltaestd, deltaemse ;
@@ -645,7 +662,59 @@ display betaem, betaestd, betaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
-display gammaeboot, deltaeboot, alphakeboot, betaeboot, rhozeboot, sigmazeboot, modelboot ;
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
+
+display gammaeboot, deltaeboot, alphakeboot, betaeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
+
+Parameters
+res(boot,*);
+
+res(boot,"betae") = betaeboot(boot) ;
+res(boot,"gammae") = gammaeboot(boot) ;
+res(boot,"alphae") = alphakeboot(boot) ;
+res(boot,"deltae") = deltaeboot(boot) ;
+res(boot,"rhoe") = rhozeboot(boot);
+res(boot,"sigmae") = sigmazeboot(boot);
+res(boot,"solvestat") = modelboot(boot);
+
+Parameters
+res_table(*,*);
+res_table("beta","True")=beta_true;
+res_table("beta","Mean")=betaem;
+res_table("beta","S.D.")=betaestd;
+res_table("beta","Bias")=betaebias;
+res_table("beta","MSE")=betaemse;
+
+res_table("gamma","True")=gamma_true;
+res_table("gamma","Mean")=gammaem;
+res_table("gamma","S.D.")=gammaestd;
+res_table("gamma","Bias")=gammaebias;
+res_table("gamma","MSE")=gammaemse;
+
+res_table("alpha","True")=alphak_true;
+res_table("alpha","S.D.")=alphakestd;
+res_table("alpha","Bias")=alphakebias;
+res_table("alpha","MSE")=alphakemse;
+
+res_table("delta","True")=delta_true;
+res_table("delta","Mean")=deltaem;
+res_table("delta","S.D.")=deltaestd;
+res_table("delta","Bias")=deltaebias;
+res_table("delta","MSE")=deltaemse;
+
+res_table("rho","True")=rho_true;
+res_table("rho","Mean")=rhozem;
+res_table("rho","S.D.")=rhozestd;
+res_table("rho","Bias")=rhozebias;
+res_table("rho","MSE")=rhozemse;
+
+res_table("sigma","True")=sigma_true;
+res_table("sigma","Mean")=sigmazem;
+res_table("sigma","S.D.")=sigmazestd;
+res_table("sigma","Bias")=sigmazebias;
+res_table("sigma","MSE")=sigmazemse;
+
+execute_unload 'rbc-vf.gdx';
 
 *execute_unload 'res_smolyak_100_true.gdx';
 
