@@ -31,7 +31,7 @@ cbar=(1/beta+delta-1)/alphak - delta;
 *-----------------------------------------------------------
 * parameters for projection
 sets nk  number of nodes for capital /1*5/ ;
-sets nz  number of nodes for productivity shock / 1*10/ ;
+sets nz  number of nodes for productivity shock / 1*5/ ;
 alias (nk,nka,nkb) ;
 alias (nz,nza,nzb,nz)  ;
 
@@ -62,15 +62,15 @@ prob(nz)
 *err0("1")=-2.8570; err0("2")=-1.3556; err0("3")=0;  err0("4")=1.3556; err0("5")= 2.8570;
 *prob("1")=0.0113; prob("2")=0.2221; prob("3")=0.5333; prob("4")=0.2221; prob("5")=0.0113;
 
-*err0("1")= -2.85697001387281; err0("2")= -1.35562617997427; err0("3")= 0; err0("4")= 1.35562617997427; err0("5")= 2.85697001387281;
-*prob("1")=0.0112574113277207;prob("2")=0.222075922005613; prob("3")=0.533333333333333;prob("4")=0.222075922005613 ;prob("5")=0.0112574113277207 ;
+err0("1")= -2.85697001387281; err0("2")= -1.35562617997427; err0("3")= 0; err0("4")= 1.35562617997427; err0("5")= 2.85697001387281;
+prob("1")=0.0112574113277207;prob("2")=0.222075922005613; prob("3")=0.533333333333333;prob("4")=0.222075922005613 ;prob("5")=0.0112574113277207 ;
 
 * std=1
-err0("1")=-4.85946282833231; err0("2")=-3.58182348355193; err0("3")=-2.48432584163896; err0("4")=-1.46598909439116;err0("5")=-0.484935707515498;
-err0("6")=0.484935707515498;err0("7")=1.46598909439116;err0("8")=2.48432584163896;err0("9")=3.58182348355193;err0("10")=4.85946282833231;
+*err0("1")=-4.85946282833231; err0("2")=-3.58182348355193; err0("3")=-2.48432584163896; err0("4")=-1.46598909439116;err0("5")=-0.484935707515498;
+*err0("6")=0.484935707515498;err0("7")=1.46598909439116;err0("8")=2.48432584163896;err0("9")=3.58182348355193;err0("10")=4.85946282833231;
 
-prob("1") = 4.31065263071829e-06;prob("2") = 0.000758070934312218;prob("3") = 0.0191115805007703;prob("4") = 0.135483702980268;prob("5") = 0.344642334932019;
-prob("6") = 0.344642334932019;prob("7") = 0.135483702980268;prob("8") = 0.0191115805007703;prob("9") = 0.000758070934312218;prob("10") = 4.31065263071829e-06;
+*prob("1") = 4.31065263071829e-06;prob("2") = 0.000758070934312218;prob("3") = 0.0191115805007703;prob("4") = 0.135483702980268;prob("5") = 0.344642334932019;
+*prob("6") = 0.344642334932019;prob("7") = 0.135483702980268;prob("8") = 0.0191115805007703;prob("9") = 0.000758070934312218;prob("10") = 4.31065263071829e-06;
 
 
 k0max = kbar*1.1;
@@ -680,7 +680,27 @@ display sigmazem, sigmazestd, sigmazemse ;
 
 scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
-display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot,elapsed ;
+parameters
+alphakebias
+deltaebias
+rhozebias
+sigmazebias
+;
+
+alphakebias = (alphakem-alphak_true)/alphak_true;
+deltaebias = (deltaem-delta_true)/delta_true;
+rhozebias = (rhozem-rho_true)/rho_true;
+sigmazebias = (sigmazem-sigma_true)/sigma_true;
+
+
+display alphakem, alphakestd, alphakemse ;
+display deltaem, deltaestd, deltaemse ;
+display rhozem, rhozestd, rhozemse ;
+display sigmazem, sigmazestd, sigmazemse ;
+
+display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
+
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -691,7 +711,33 @@ res(boot,"rhoe") = rhozeboot(boot);
 res(boot,"sigmae") = sigmazeboot(boot);
 res(boot,"solvestat") = modelboot(boot);
 
-execute_unload 'res_vf_solution_fix_gamma_mea.gdx';
+Parameters
+res_table(*,*);
+
+res_table("alpha","True")=alphak_true;
+res_table("alpha","S.D.")=alphakestd;
+res_table("alpha","Bias")=alphakebias;
+res_table("alpha","MSE")=alphakemse;
+
+res_table("delta","True")=delta_true;
+res_table("delta","Mean")=deltaem;
+res_table("delta","S.D.")=deltaestd;
+res_table("delta","Bias")=deltaebias;
+res_table("delta","MSE")=deltaemse;
+
+res_table("rho","True")=rho_true;
+res_table("rho","Mean")=rhozem;
+res_table("rho","S.D.")=rhozestd;
+res_table("rho","Bias")=rhozebias;
+res_table("rho","MSE")=rhozemse;
+
+res_table("sigma","True")=sigma_true;
+res_table("sigma","Mean")=sigmazem;
+res_table("sigma","S.D.")=sigmazestd;
+res_table("sigma","Bias")=sigmazebias;
+res_table("sigma","MSE")=sigmazemse;
+
+execute_unload 'res-vf-solution-fix-gamma-mea.gdx';
 $libinclude xlexport res res4.xlsx res!a1:h101
 
 
