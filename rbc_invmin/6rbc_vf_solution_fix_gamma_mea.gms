@@ -319,7 +319,7 @@ eulerer(t)
 eulererne(t,nz)
 erry(t)
 
-coeffe(nceoff)
+coeffe(ncoeff)
 
 
 
@@ -642,7 +642,6 @@ vfderivss = (sum(t,cs(t))/card(t) )**(-gammae)*
             (1-deltae.l + ((1/betae+deltae.l-1)/alphake.l)*alphake.l*kbar**(alphake.l-1));
 
 
-coeffe("2").l = vfderivss;
 *coeffe("1").l = 100;
 coeffe.l("2") = vfderivss;
 *display coeffe("2").l;

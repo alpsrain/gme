@@ -269,12 +269,7 @@ errz(t)
 eulerer(t)
 eulererne(t,nz)
 
-coeffe(nceoff)
-
-
-
-
-
+coeffe(ncoeff)
 
 ;
 
@@ -524,7 +519,7 @@ modelboot(boot)
 parameter
 vfderivss ;
 
-loop(boot$(ord(boot) ),
+loop(boot$(ord(boot) le 10 ),
 cs(t) = css(t,boot);
 ys(t) = yss(t,boot);
 
@@ -654,8 +649,8 @@ res(boot,"rhoe") = rhozeboot(boot);
 res(boot,"sigmae") = sigmazeboot(boot);
 res(boot,"solvestat") = modelboot(boot);
 
-execute_unload 'res_vf_solution_fix_gamma.gdx';
-$libinclude xlexport res res2.xlsx res!a1:h101      
+*execute_unload 'res_vf_solution_fix_gamma.gdx';
+$libinclude xlexport res res.xlsx res!a1:h101
 
 
 
