@@ -7,17 +7,17 @@ Set t    / 1*10000/
     name /css, yss,kss,zss/
 ;
 
-Parameters
-series(t,name) ;
-$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
+*Parameters
+*series(t,name) ;
+*$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
 *$libinclude xlimport series SimGrowthMaliar.xlsx cons_invmin80!a1:e10001
 
-*Parameters
-*series(t,name)
 
-*$gdxIn SimGrowthMaliar_macro_low.gdx
-*$LOAD series
-*$GDXIN
+Parameters
+series(t,name)
+$gdxIn simdata.gdx
+$LOAD series
+$GDXIN
 
 
 Parameters
@@ -69,6 +69,7 @@ err0("1")=-2.8570; err0("2")=-1.3556; err0("3")=0;  err0("4")=1.3556; err0("5")=
 prob("1")=0.0113; prob("2")=0.2221; prob("3")=0.5333; prob("4")=0.2221; prob("5")=0.0113;
 
 sets k number of support values / 1*3 / ;
+Sets ncoeff number of coefficients   /1*6/;
 
 Parameters
 betasv(k)
@@ -103,13 +104,7 @@ errz(t)
 eulerer(t)
 eulererne(t,nz)
 
-
-mu0
-mu1
-mu2
-mu11
-mu12
-mu22
+coeffe(ncoeff)
 ;
 
 Positive variables
@@ -209,27 +204,27 @@ eqstdze..                           (sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax
 eqys(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..                           ys(t) =E= ((1/betae+deltae-1)/alphake)*exp(ze(t))*ke(t)**alphake;                                                                         ;
 
 
-eqpolicy(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..                        (cs(t)+ eulerer(t)) **(-gammae)  =E=  mu0
-                                                            + mu1*ke(t)
-                                                            + mu2*ze(t)
-                                                            + 0.5*mu11*ke(t)*ke(t)
-                                                            + 0.5*mu22*ze(t)*ze(t)
-                                                            + mu12*ke(t)*ze(t)
+eqpolicy(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..                        (cs(t)+ eulerer(t)) **(-gammae)  =E=  coeffe("1")
+                                                            + coeffe("2")*ke(t)
+                                                            + coeffe("3")*ze(t)
+                                                            + 0.5*coeffe("4")*ke(t)*ke(t)
+                                                            + 0.5*coeffe("6")*ze(t)*ze(t)
+                                                            + coeffe("5")*ke(t)*ze(t)
                                                             ;
 
-eqcne(t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..                        (-(cne(t,nz)+ eulererne(t,nz))**(-gammae) + mu0
-                                                            + mu1*ke(t+1)
-                                                            + mu2*zne(t,nz)
-                                                            + 0.5*mu11*ke(t+1)*ke(t+1)
-                                                            + 0.5*mu22*zne(t,nz)*zne(t,nz)
-                                                            + mu12*ke(t+1)*zne(t,nz)
+eqcne(t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..                        (-(cne(t,nz)+ eulererne(t,nz))**(-gammae) + coeffe("1")
+                                                            + coeffe("2")*ke(t+1)
+                                                            + coeffe("3")*zne(t,nz)
+                                                            + 0.5*coeffe("4")*ke(t+1)*ke(t+1)
+                                                            + 0.5*coeffe("6")*zne(t,nz)*zne(t,nz)
+                                                            + coeffe("5")*ke(t+1)*zne(t,nz)
                                                   )$(ord(t) LT tmax)
-                                   + (-(cne(t,nz)+ eulererne(t,nz))**(-gammae) + mu0
-                                                            + mu1*kfin
-                                                            + mu2*zne(t,nz)
-                                                            + 0.5*mu11*kfin*ke(t+1)
-                                                            + 0.5*mu22*zne(t,nz)*zne(t,nz)
-                                                            + mu12*kfin*zne(t,nz)
+                                   + (-(cne(t,nz)+ eulererne(t,nz))**(-gammae) + coeffe("1")
+                                                            + coeffe("2")*kfin
+                                                            + coeffe("3")*zne(t,nz)
+                                                            + 0.5*coeffe("4")*kfin*ke(t+1)
+                                                            + 0.5*coeffe("6")*zne(t,nz)*zne(t,nz)
+                                                            + coeffe("5")*kfin*zne(t,nz)
                                                   )$(ord(t) EQ tmax)
                                    =E= 0 ;
 
@@ -363,7 +358,7 @@ modelboot(boot)
 
 
 scalar tstep /100/;
-loop(boot$(ord(boot) eq 2  ),
+loop(boot$(ord(boot) le 10),
 tmin = 1+(ord(boot)-1)*tstep ;
 tmax = tstep+(ord(boot)-1)*tstep ;
 
@@ -416,11 +411,7 @@ perrzsv.l(t,k)          = 1/card(k) ;
 perreulerer.l(t,k)      = 1/card(k) ;
 perreulerneer.l(t,k,nz) = 1/card(k) ;
 
-mu0.l = (sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ), cs(t))/(tmax-tmin) )**(-gammae.l) ;
-*mu11.l = 0.1;
-*mu22.l = 0.1;
-*mu12.l = 0.1;
-
+coeffe.l("1") = (sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ), cs(t))/(tmax-tmin) )**(-gammae.l) ;
 
 predict = 0.01 ;
 

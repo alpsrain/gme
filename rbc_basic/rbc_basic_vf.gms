@@ -481,7 +481,7 @@ zmin = -zmax ;
 errzsv("1")             = zmin ;
 errzsv("3")             = zmax ;
 
-sets boot / 1*10/ ;
+sets boot / 1*20/ ;
 parameters
 gammaeboot(boot)
 deltaeboot(boot)
@@ -496,7 +496,7 @@ parameter
 vfderivss ;
 
 scalar tstep /100/;
-loop(boot$(ord(boot) le 5 ),
+loop(boot$(ord(boot) ge 10 and  ord(boot) le 20 ),
 tmin = 1+(ord(boot)-1)*tstep ;
 tmax = tstep+(ord(boot)-1)*tstep ;
 

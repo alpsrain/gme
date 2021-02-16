@@ -25,35 +25,38 @@ Set t    / 1*10000/
     name /css, yss,kss,zss/
 ;
 
-Parameters
-series(t,name) ;
-$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
+*Parameters
+*series(t,name) ;
+*$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
 *$libinclude xlimport series SimGrowthMaliar.xlsx cons_invmin80!a1:e10001
+
+
+Parameters
+series(t,name)
+$gdxIn simdata.gdx
+$LOAD series
+$GDXIN
 
 Parameters
 cs(t)
 ys(t)
 zs(t)
 ks(t)
-invs(t)
 ;
 
 cs(t)=series(t,"css");
 ys(t)=series(t,"yss");
 zs(t)=series(t,"zss");
 ks(t)=series(t,"kss");
-invs(t)= ys(t)-cs(t);
-
 zs(t) = log(zs(t));
 
 Parameters
 cmean
 ymean
-invmean
 ;
 cmean = sum(t, cs(t))/card(t) ;
 ymean = sum(t, ys(t))/card(t) ;
-invmean = sum(t,invs(t))/card(t);
+
 
 Parameters
 cs0(t)
@@ -67,19 +70,6 @@ parameters
 diffc(t) ;
 diffc(t) =cs(t)-cs0(t) ;
 display diffc ;
-
-Parameters
-invs2(t)
-diffinv
-diffinv_mean
-diffinv_std;
-;
-invs2(t) = ys(t)-cs(t);
-diffinv(t) = invs2(t) - invs(t);
-diffinv_mean = sum(t,diffinv(t))/card(t);
-diffinv_std = (sum(t,(diffinv(t)-diffinv_mean)*(diffinv(t)-diffinv_mean))/card(t))**0.5;
-
-display diffinv_std, invmean,cmean, ymean;
 
 
 
@@ -112,52 +102,33 @@ prob("1")=0.0112574113277207;prob("2")=0.222075922005613; prob("3")=0.5333333333
 * Compute Approximation errors
 *------------------------------
 *We need to take VF coefficients from Maliar because data is generating with VFI
+Sets ncoeff number of coefficients   /1*21/;
 Parameters
-mus0
-mus1
-mus2
-mus11
-mus12
-mus22
-mus111
-mus112
-mus122
-mus222
-mus1111
-mus1112
-mus1122
-mus1222
-mus2222
-mus11111
-mus11112
-mus11122
-mus11222
-mus12222
-mus22222
+coeffs(ncoeff)
 vfs(t)
 ;
 
-mus0 = -2180.15171495657 ;
-mus1=1400.01608514611 ;
-mus2=862.029760805889 ;
-mus11=-1220.14528059860 ;
-mus12=-783.588984561966 ;
-mus22=-604.033513698975 ;
-mus111=703.633878591297  ;
-mus112=485.034417022351 ;
-mus122=349.366106273512 ;
-mus222=313.066641734630 ;
-mus1111=-231.209152546818 ;
-mus1112=-168.697609655073 ;
-mus1122=-125.177845924741 ;
-mus1222=-98.1276469190940 ;
-mus2222=-97.4290009177044 ;
-mus11111=32.8440027073006 ;
-mus11112=24.9985797392119 ;
-mus11122=19.3862071531376 ;
-mus11222=15.0111656816389 ;
-mus12222=12.6763031927360 ;
-mus22222=13.4660064430677 ;
+coeffs("1") = -2180.15171495657 ;
+coeffs("2")=1400.01608514611 ;
+coeffs("3")=862.029760805889 ;
+coeffs("4")=-1220.14528059860 ;
+coeffs("5")=-783.588984561966 ;
+coeffs("6")=-604.033513698975 ;
+coeffs("7")=703.633878591297  ;
+coeffs("8")=485.034417022351 ;
+coeffs("9")=349.366106273512 ;
+coeffs("10")=313.066641734630 ;
+coeffs("11")=-231.209152546818 ;
+coeffs("12")=-168.697609655073 ;
+coeffs("13")=-125.177845924741 ;
+coeffs("14")=-98.1276469190940 ;
+coeffs("15")=-97.4290009177044 ;
+coeffs("16")=32.8440027073006 ;
+coeffs("17")=24.9985797392119 ;
+coeffs("18")=19.3862071531376 ;
+coeffs("19")=15.0111656816389 ;
+coeffs("20")=12.6763031927360 ;
+coeffs("21")=13.4660064430677 ;
 
 Parameters
 z1s
@@ -171,21 +142,21 @@ Mean_Residuals;
 * Future period quantities in n_nodes integration nodes (k1,a1)
 z1s(t,nzb) = rho*zs(t)+sigma*err0(nzb);
 k1s(t,nzb) =  (1-delta)*ks(t) + ys(t) - cs(t);
-vfs_deriv1(t,nzb) = mus1
-              + mus11*2*k1s(t,nzb)
-              + mus12*exp(z1s(t,nzb))
-              + mus111*3*k1s(t,nzb)*k1s(t,nzb)
-              + mus112*2*k1s(t,nzb)*exp(z1s(t,nzb))
-              + mus122  *exp(z1s(t,nzb))*exp(z1s(t,nzb))
-              + mus1111*4*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)
-              + mus1112*3*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))
-              + mus1122*2*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))
-              + mus1222  *exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
-              + mus11111*5*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)
-              + mus11112*4*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))
-              + mus11122*3*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))
-              + mus11222*2*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
-              + mus12222*  exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
+vfs_deriv1(t,nzb) = coeffs("2")
+              + coeffs("4")*2*k1s(t,nzb)
+              + coeffs("5")*exp(z1s(t,nzb))
+              + coeffs("7")*3*k1s(t,nzb)*k1s(t,nzb)
+              + coeffs("8")*2*k1s(t,nzb)*exp(z1s(t,nzb))
+              + coeffs("9")  *exp(z1s(t,nzb))*exp(z1s(t,nzb))
+              + coeffs("11")*4*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)
+              + coeffs("12")*3*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))
+              + coeffs("13")*2*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))
+              + coeffs("14")  *exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
+              + coeffs("16")*5*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)
+              + coeffs("17")*4*k1s(t,nzb)*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))
+              + coeffs("18")*3*k1s(t,nzb)*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))
+              + coeffs("19")*2*k1s(t,nzb)*exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
+              + coeffs("20")*  exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))*exp(z1s(t,nzb))
 ;
 u1s(t,nzb) = vfs_deriv1(t,nzb) / (1-delta + ((1/beta+delta-1)/alphak)*exp(z1s(t,nzb))*alphak*k1s(t,nzb)**(alphak-1)) ;
 c1s(t,nzb) = u1s(t,nzb)**(-1/gamma) ;
@@ -551,7 +522,7 @@ modelboot(boot)
 
 
 scalar tstep /100/;
-loop(boot$(ord(boot) ),
+loop(boot$(ord(boot) le 10),
 tmin = 1+(ord(boot)-1)*tstep ;
 tmax = tstep+(ord(boot)-1)*tstep ;
 
@@ -722,8 +693,8 @@ res(boot,"rhoe") = rhozeboot(boot);
 res(boot,"sigmae") = sigmazeboot(boot);
 res(boot,"solvestat") = modelboot(boot);
 
-execute_unload 'rbc-cs-5nodes.gdx';
-$libinclude xlexport res res.xlsx res!a1:h101
+*execute_unload 'rbc-cs-5nodes.gdx';
+*$libinclude xlexport res res.xlsx res!a1:h101
 
 
 
