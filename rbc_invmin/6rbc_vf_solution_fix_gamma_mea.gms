@@ -26,9 +26,10 @@ sigma=sigma_true;
 kbar=1;
 cbar=(1/beta+delta-1)/alphak - delta;
 
-*--------------------------------------------------
+*-----------------------------------------------------------
+* Simulate data from the vf coefficients from MaliarJudd2016
+*-----------------------------------------------------------
 * parameters for projection
-*--------------------------------------------------
 sets nk  number of nodes for capital /1*5/ ;
 sets nz  number of nodes for productivity shock / 1*10/ ;
 alias (nk,nka,nkb) ;

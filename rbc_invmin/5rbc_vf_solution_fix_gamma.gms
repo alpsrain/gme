@@ -26,9 +26,10 @@ sigma=sigma_true;
 kbar=1;
 cbar=(1/beta+delta-1)/alphak - delta;
 
-*--------------------------------------------------
+*-----------------------------------------------------------
+* Simulate data from the vf coefficients from MaliarJudd2016
+*-----------------------------------------------------------
 * parameters for projection
-*--------------------------------------------------
 sets nk  number of nodes for capital /1*5/ ;
 sets nz  number of nodes for productivity shock / 1*10/ ;
 alias (nk,nka,nkb) ;
@@ -107,6 +108,8 @@ coeffs("13")=-23.0860115802875 ;
 coeffs("14")=-18.0724899668120  ;
 coeffs("15")=-17.8573192761438 ;
 
+
+$ontext
 *---------------------------
 * data simulation
 *---------------------------
@@ -169,6 +172,7 @@ yss(t,boot) = ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*kss(t,boot)**alphak  ;
 uss(t,boot) = vfs_deriv(t,boot) / (1-delta + ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*alphak*kss(t,boot)**(alphak-1)) ;
 css(t,boot) = uss(t,boot)**(-1/gamma) ;
 kss(t+1,boot) = (1-delta)*kss(t,boot) + yss(t,boot) - css(t,boot);
+$offtext
 
 *CHECK BELOW THE APPROXIMATION ERROR
 * Future period quantities in n_nodes integration nodes (k1,a1)

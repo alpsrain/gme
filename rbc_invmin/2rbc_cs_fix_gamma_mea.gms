@@ -8,10 +8,17 @@ Set t    / 1*10000/
     name /css, yss,kss,zss/
 ;
 
+*Parameters
+*series(t,name) ;
+*$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
+*$libinclude xlimport series SimGrowthMaliar.xlsx cons_invmin80!a1:e10001
+
+
 Parameters
-series(t,name) ;
-*$libinclude xlimport series SimGrowthMaliar.xlsx cons_invmin95!a1:e10001
-$libinclude xlimport series SimGrowthMaliar.xlsx k20nodes!a1:e10001
+series(t,name)
+$gdxIn simdata.gdx
+$LOAD series
+$GDXIN
 
 Parameters
 cs(t)
