@@ -57,17 +57,6 @@ vfs(t)
 ;
 
 * no binding constraint
-*coeffs("1")=-1934.34628076383;
-*coeffs("2")=718.707415294864;
-*coeffs("3")=441.254481673093;
-*coeffs("4")=-306.909205844206;
-*coeffs("5")=-198.494283185508;
-*coeffs("6")=-151.579808698686;
-*coeffs("7")=58.3862770368426;
-*coeffs("8")=40.5711908272261;
-*coeffs("9")=29.4726952446437;
-*coeffs("10")=25.9841273503470;
-
 coeffs("1")=-2064.17757419394;
 coeffs("2")=1040.49735048140;
 coeffs("3")=640.142526058677 ;
@@ -249,11 +238,6 @@ eqvf_deriv(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..
                                                             + coeffe("12")*3*ke(t)*ke(t)*exp(ze(t))
                                                             + coeffe("13")*2*ke(t)*exp(ze(t))*exp(ze(t))
                                                             + coeffe("14")  *exp(ze(t))*exp(ze(t))*exp(ze(t))
-*                                                            + coeffe("16")*5*ke(t)*ke(t)*ke(t)*ke(t)
-*                                                            + coeffe("17")*4*ke(t)*ke(t)*ke(t)*exp(ze(t))
-*                                                            + coeffe("18")*3*ke(t)*ke(t)*exp(ze(t))*exp(ze(t))
-*                                                            + coeffe("19")*2*ke(t)*exp(ze(t))*exp(ze(t))*exp(ze(t))
-*                                                            + coeffe("20")  *exp(ze(t))*exp(ze(t))*exp(ze(t))*exp(ze(t))
                                                                              ;
 
 eqcs(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..
