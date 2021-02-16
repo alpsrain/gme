@@ -104,17 +104,6 @@ vfs(t)
 ;
 
 * no binding constraint
-*mus0=-1934.34628076383;
-*mus1=718.707415294864;
-*mus2=441.254481673093;
-*mus11=-306.909205844206;
-*mus12=-198.494283185508;
-*mus22=-151.579808698686;
-*mus111=58.3862770368426;
-*mus112=40.5711908272261;
-*mus122=29.4726952446437;
-*mus222=25.9841273503470;
-
 mus0=-2064.17757419394;
 mus1=1040.49735048140;
 mus2=640.142526058677 ;
@@ -130,16 +119,6 @@ mus1112=-30.8388594819872 ;
 mus1122=-23.0860115802875 ;
 mus1222=-18.0724899668120  ;
 mus2222=-17.8573192761438 ;
-
-$ontext
-* with binding constraint
-mus0=-1837.53758882935 ;
-mus1=455.467852904367 ;
-mus2 =344.048425870813 ;
-mus11=-97.6881594180974 ;
-mus12=-67.6087438111959 ;
-mus22=-78.1951270498086 ;
-$offtext
 
 *---------------------------
 * data simulation
@@ -393,26 +372,6 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - sum((k,t,nz), perreulerneer(t,k,nz)*log(1.e-5+perreulerneer(t,k,nz)))
 ;
 
-$ontext
-eqvf(t)..
-                                   vf(t)                   =E=   mu0
-                                                            + mu1*ke(t)
-                                                            + mu2*exp(ze(t))
-                                                            + mu11*ke(t)*ke(t)
-                                                            + mu22*exp(ze(t))*exp(ze(t))
-                                                            + mu12*ke(t)*exp(ze(t))
-                                                            + mu111*ke(t)*ke(t)*ke(t)
-                                                            + mu112*ke(t)*ke(t)*exp(ze(t))
-                                                            + mu122*ke(t)*exp(ze(t))*exp(ze(t))
-                                                            + mu222*exp(ze(t))*exp(ze(t))*exp(ze(t))
-                                                            + mu1111*ke(t)*ke(t)*ke(t)*ke(t)
-                                                            + mu1112*ke(t)*ke(t)*ke(t)*exp(ze(t))
-                                                            + mu1122*ke(t)*ke(t)*exp(ze(t))*exp(ze(t))
-                                                            + mu1222*ke(t)*exp(ze(t))*exp(ze(t))*exp(ze(t))
-                                                            + mu2222*exp(ze(t))*exp(ze(t))*exp(ze(t))*exp(ze(t))
-                                                            ;
-$offtext
-
 eqvf_deriv(t)..
                                     vf_deriv(t) + eulerer(t)   =E= mu1
                                                             + mu11*2*ke(t)
@@ -429,44 +388,6 @@ eqvf_deriv(t)..
 eqcs(t)..                          cs(t)**(-gammae) =e= (vf_deriv(t) ) /((1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1))) ;
 
 *eqcs(t)..                          vf(t) =e= ((cs(t))**(1-gammae)-1)/(1-gammae) + betae* sum(nz,prob(nz)*vfne(t,nz)) ;
-
-$ontext
-eqvfne(t,nz)..
-                                    vfne(t,nz)   =E=  (mu0
-                                                            + mu1*ke(t+1)
-                                                            + mu2*exp(zne(t,nz))
-                                                            + mu11*ke(t+1)*ke(t+1)
-                                                            + mu22*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu12*ke(t+1)*exp(zne(t,nz))
-                                                            + mu111*ke(t+1)*ke(t+1)*ke(t+1)
-                                                            + mu112*ke(t+1)*ke(t+1)*exp(zne(t,nz))
-                                                            + mu122*ke(t+1)*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu222*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1111*ke(t+1)*ke(t+1)*ke(t+1)*ke(t+1)
-                                                            + mu1112*ke(t+1)*ke(t+1)*ke(t+1)*ze(t+1)
-                                                            + mu1122*ke(t+1)*ke(t+1)*ze(t+1)*ze(t+1)
-                                                            + mu1222*ke(t+1)*ze(t+1)*ze(t+1)*ze(t+1)
-                                                            + mu2222*ze(t+1)*ze(t+1)*ze(t+1)*ze(t+1)
-                                                             )$(ord(t) LT card(t))
-                                                             +
-                                                             (mu0
-                                                            + mu1*kfin
-                                                            + mu2*exp(zne(t,nz))
-                                                            + mu11*kfin*kfin
-                                                            + mu22*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu12*kfin*exp(zne(t,nz))
-                                                            + mu111*kfin*kfin*kfin
-                                                            + mu112*kfin*kfin*exp(zne(t,nz))
-                                                            + mu122*kfin*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu222*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1111*kfin*kfin*kfin*kfin
-                                                            + mu1112*kfin*kfin*kfin*ze(t+1)
-                                                            + mu1122*kfin*kfin*ze(t+1)*ze(t+1)
-                                                            + mu1222*kfin*ze(t+1)*ze(t+1)*ze(t+1)
-                                                            + mu2222*ze(t+1)*ze(t+1)*ze(t+1)*ze(t+1)
-                                                             )$(ord(t) EQ card(t))
-                                                            ;
-$offtext
 
 eqvfne_deriv(t,nz)..
                                      vfne_deriv(t,nz) + eulererne(t,nz) =E= (mu1
