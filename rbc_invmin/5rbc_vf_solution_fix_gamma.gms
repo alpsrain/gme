@@ -109,7 +109,7 @@ coeffs("14")=-18.0724899668120  ;
 coeffs("15")=-17.8573192761438 ;
 
 
-$ontext
+
 *---------------------------
 * data simulation
 *---------------------------
@@ -172,7 +172,7 @@ yss(t,boot) = ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*kss(t,boot)**alphak  ;
 uss(t,boot) = vfs_deriv(t,boot) / (1-delta + ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*alphak*kss(t,boot)**(alphak-1)) ;
 css(t,boot) = uss(t,boot)**(-1/gamma) ;
 kss(t+1,boot) = (1-delta)*kss(t,boot) + yss(t,boot) - css(t,boot);
-$offtext
+
 
 *CHECK BELOW THE APPROXIMATION ERROR
 * Future period quantities in n_nodes integration nodes (k1,a1)
@@ -271,7 +271,7 @@ ze(t)
 zne(t,nz)
 errz(t)
 eulerer(t)
-eulererne(t,nz)
+eulererne(t)
 
 coeffe(ncoeff)
 
@@ -285,7 +285,7 @@ psigmazsv(k)
 
 perrzsv(t,k)
 perreulerer(t,k)
-perreulerneer(t,k,nz)
+perreulerneer(t,k)
 
 vf(t)
 vf_deriv(t)
@@ -327,8 +327,8 @@ eqvf_FOC(t)
 
 eqeulerer(t)
 eqpeulerersv(t)
-eqeulerneer(t,nz)
-eqpeulerneersv(t,nz)
+eqeulerneer(t)
+eqpeulerneersv(t)
 
 eqmut(t)
 eqcons(t)
@@ -341,11 +341,11 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - predict*sum(k, psigmazsv(k)*LOG(1.e-5+psigmazsv(k)))
                                   - predict*sum((k,t), perrzsv(t,k)*log(1.e-5+perrzsv(t,k)))
                                   - sum((k,t), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
-                                  - sum((k,t,nz), perreulerneer(t,k,nz)*log(1.e-5+perreulerneer(t,k,nz)))
+                                  - sum((k,t,nz), perreulerneer(t,k)*log(1.e-5+perreulerneer(t,k)))
 ;
 
 eqvf_deriv(t)..
-                                    vf_deriv(t) + eulerer(t)   =E= coeffe("2")
+                                    vf_deriv(t)    =E= coeffe("2")
                                                             + coeffe("4")*2*ke(t)
                                                             + coeffe("5")  *exp(ze(t))
                                                             + coeffe("7")*3*ke(t)*ke(t)
@@ -357,12 +357,12 @@ eqvf_deriv(t)..
                                                             + coeffe("14")  *exp(ze(t))*exp(ze(t))*exp(ze(t))
                                                              ;
 
-eqcs(t)..                          cs(t)**(-gammae) =e= (vf_deriv(t) ) /((1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1))) ;
+eqcs(t)..                          (cs(t) - eulerer(t))**(-gammae) =e= (vf_deriv(t) ) /((1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1))) ;
 
 *eqcs(t)..                          vf(t) =e= ((cs(t))**(1-gammae)-1)/(1-gammae) + betae* sum(nz,prob(nz)*vfne(t,nz)) ;
 
 eqvfne_deriv(t,nz)..
-                                     vfne_deriv(t,nz) + eulererne(t,nz) =E= (coeffe("2")
+                                     vfne_deriv(t,nz)  =E= (coeffe("2")
                                                             + coeffe("4")*2*ke(t+1)
                                                             + coeffe("5")*exp(zne(t,nz))
                                                             + coeffe("7")*3*ke(t+1)*ke(t+1)
@@ -388,7 +388,7 @@ eqvfne_deriv(t,nz)..
                                                              ;
 
 
-eqvf_FOC(t)..         cs(t)**(-gammae)  =E= betae*sum(nz,prob(nz)*(vfne_deriv(t,nz)+ 0*eulererne(t,nz)));
+eqvf_FOC(t)..         (cs(t)-eulererne(t))**(-gammae)  =E= betae*sum(nz,prob(nz)*(vfne_deriv(t,nz)+ 0*eulererne(t)));
 
 
 * Modeling next period TFP expectation
@@ -425,8 +425,8 @@ eqperrzsv(t)..        1          =E= sum(k, perrzsv(t,k)) ;
 eqeulerer(t)..          eulerer(t) =E= sum(k, perreulerer(t,k)*erreulersv(k)) ;
 eqpeulerersv(t)..       1          =E= sum(k, perreulerer(t,k)) ;
 
-eqeulerneer(t,nz)..          eulererne(t,nz) =E= sum(k, perreulerneer(t,k,nz)*erreulernesv(k)) ;
-eqpeulerneersv(t,nz)..       1          =E= sum(k, perreulerneer(t,k,nz)) ;
+eqeulerneer(t)..          eulererne(t) =E= sum(k, perreulerneer(t,k)*erreulernesv(k)) ;
+eqpeulerneersv(t)..       1          =E= sum(k, perreulerneer(t,k)) ;
 
 
 model estimation /
@@ -559,14 +559,14 @@ zne.up(t,nz)       = zmax ;
 zne.lo(t,nz)       = zmin ;
 errz.l(t)         = 0 ;
 eulerer.l(t)      = 0 ;
-eulererne.l(t,nz) = 0 ;
+eulererne.l(t) = 0 ;
 palphaksv.l(k)          = 1/card(k) ;
 pdeltasv.l(k)           = 1/card(k) ;
 prhozsv.l(k)            = 1/card(k) ;
 psigmazsv.l(k)          = 1/card(k) ;
 perrzsv.l(t,k)          = 1/card(k) ;
 perreulerer.l(t,k)      = 1/card(k) ;
-perreulerneer.l(t,k,nz) = 1/card(k) ;
+perreulerneer.l(t,k) = 1/card(k) ;
 
 vf_deriv.l(t) =  cs(t)**(-gammae)*
             (1-deltae.l + ((1/betae+deltae.l-1)/alphake.l)*alphake.l*kbar**(alphake.l-1));
@@ -589,10 +589,10 @@ $offtext
 
 predict = 0.01;
 
-erreulersv("1")         = -1e-1*vfderivss;
-erreulersv("3")         = 1e-1*vfderivss;
-erreulernesv("1")       = -1e-1*vfderivss;
-erreulernesv("3")       = 1e-1*vfderivss ;
+erreulersv("1")         = -0.2*sum(t,cs(t))/card(t);
+erreulersv("3")         = 0.2*sum(t,cs(t))/card(t);
+erreulernesv("1")       = -0.2*sum(t,cs(t))/card(t);
+erreulernesv("3")       = 0.2*sum(t,cs(t))/card(t);
 solve estimation using nlp maximising entropie ;
 
 deltaeboot(boot) = deltae.l ;
