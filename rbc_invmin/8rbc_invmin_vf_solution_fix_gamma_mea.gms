@@ -84,42 +84,29 @@ z0exp(nz)  = z0expmin + (z0expmax-z0expmin)/(card(nz)-1) * (ord(nz)-1) ;
 *--------------------------------------------------
 * value function coefficients from MaliarJudd2016
 *--------------------------------------------------
+Sets ncoeff number of coefficients   /1*21/;
 Parameters
-mus0
-mus1
-mus2
-mus11
-mus12
-mus22
-mus111
-mus112
-mus122
-mus222
-mus1111
-mus1112
-mus1122
-mus1222
-mus2222
+coeffs(ncoeff)
 vfs(t)
 ;
 
 
 * with binding constraint
-mus0 = -3231.35215387506 ;
-mus1 =1383.96121955887 ;
-mus2 =4645.27101925873 ;
-mus11 =-795.746871155866 ;
-mus12 =-1168.75953038294 ;
-mus22 =-5601.64342010823 ;
-mus111 =288.265892493659 ;
-mus112 =319.891012520627 ;
-mus122 =690.960008538866 ;
-mus222 =3229.02122436838 ;
-mus1111 =-46.4089018676276 ;
-mus1112 =-43.6216367357155 ;
-mus1122 =-72.0711597124692 ;
-mus1222 =-165.780577855195 ;
-mus2222 =-713.916083993840 ;
+coeffs("1") = -3231.35215387506 ;
+coeffs("2") =1383.96121955887 ;
+coeffs("3") =4645.27101925873 ;
+coeffs("4") =-795.746871155866 ;
+coeffs("5") =-1168.75953038294 ;
+coeffs("6") =-5601.64342010823 ;
+coeffs("7") =288.265892493659 ;
+coeffs("8") =319.891012520627 ;
+coeffs("9") =690.960008538866 ;
+coeffs("10") =3229.02122436838 ;
+coeffs("11") =-46.4089018676276 ;
+coeffs("12") =-43.6216367357155 ;
+coeffs("13") =-72.0711597124692 ;
+coeffs("14") =-165.780577855195 ;
+coeffs("15") =-713.916083993840 ;
 
 *---------------------------
 * data simulation
@@ -168,16 +155,16 @@ display meanzss, stdzss ;
 kss(t,boot) = kbar;
 
 loop(t$(ord(t) LE card(t)),
-vfs_deriv(t,boot) = mus1
-              + mus11*2*kss(t,boot)
-              + mus12*exp(zss(t,boot))
-              + mus111*3*kss(t,boot)*kss(t,boot)
-              + mus112*2*kss(t,boot)*exp(zss(t,boot))
-              + mus122  *exp(zss(t,boot))*exp(zss(t,boot))
-              + mus1111*4*kss(t,boot)*kss(t,boot)*kss(t,boot)
-              + mus1112*3*kss(t,boot)*kss(t,boot)*exp(zss(t,boot))
-              + mus1122*2*kss(t,boot)*exp(zss(t,boot))*exp(zss(t,boot))
-              + mus1222  *exp(zss(t,boot))*exp(zss(t,boot))*exp(zss(t,boot))
+vfs_deriv(t,boot) = coeffs("2")
+              + coeffs("4")*2*kss(t,boot)
+              + coeffs("5")*exp(zss(t,boot))
+              + coeffs("7")*3*kss(t,boot)*kss(t,boot)
+              + coeffs("8")*2*kss(t,boot)*exp(zss(t,boot))
+              + coeffs("9")  *exp(zss(t,boot))*exp(zss(t,boot))
+              + coeffs("11")*4*kss(t,boot)*kss(t,boot)*kss(t,boot)
+              + coeffs("12")*3*kss(t,boot)*kss(t,boot)*exp(zss(t,boot))
+              + coeffs("13")*2*kss(t,boot)*exp(zss(t,boot))*exp(zss(t,boot))
+              + coeffs("14")  *exp(zss(t,boot))*exp(zss(t,boot))*exp(zss(t,boot))
 ;
 
 yss(t,boot) = ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*kss(t,boot)**alphak  ;
@@ -194,16 +181,16 @@ $ontext
 * Future period quantities in n_nodes integration nodes (k1,a1)
 z1ss(t,nzb,boot) = rho*zss(t,boot)+sigma*err0(nzb);
 k1ss(t,nzb,boot) =  (1-delta)*kss(t,boot) + yss(t,boot) - css(t,boot);
-vfs_deriv1(t,nzb,boot) = mus1
-              + mus11*2*k1ss(t,nzb,boot)
-              + mus12*exp(z1ss(t,nzb,boot))
-              + mus111*3*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)
-              + mus112*2*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))
-              + mus122  *exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
-              + mus1111*4*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)
-              + mus1112*3*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))
-              + mus1122*2*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
-              + mus1222  *exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
+vfs_deriv1(t,nzb,boot) = coeffs("2")
+              + coeffs("4")*2*k1ss(t,nzb,boot)
+              + coeffs("5")*exp(z1ss(t,nzb,boot))
+              + coeffs("7")*3*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)
+              + coeffs("8")*2*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))
+              + coeffs("9")  *exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
+              + coeffs("11")*4*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)
+              + coeffs("12")*3*k1ss(t,nzb,boot)*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))
+              + coeffs("13")*2*k1ss(t,nzb,boot)*exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
+              + coeffs("14")  *exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))*exp(z1ss(t,nzb,boot))
 ;
 u1ss(t,nzb,boot)=vfs_deriv1(t,nzb,boot) / (1-delta + ((1/beta+delta-1)/alphak)*exp(z1ss(t,nzb,boot))*alphak*k1ss(t,nzb,boot)**(alphak-1)) ;
 c1ss(t,nzb,boot) = u1ss(t,nzb,boot)**(-1/gamma) ;
@@ -339,27 +326,13 @@ eulerer(t)
 eulererne(t,nz)
 erry(t)
 
-mu0
-mu1
-mu2
-mu11
-mu12
-mu22
-mu111
-mu112
-mu122
-mu222
-mu1111
-mu1112
-mu1122
-mu1222
-mu2222
-mu11111
-mu11112
-mu11122
-mu11222
-mu12222
-mu22222
+coeffe(ncoeff)
+
+
+
+
+
+
 ;
 
 Positive variables
@@ -436,16 +409,16 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
 ;
 
 eqvf_deriv(t)..
-                                    vf_deriv(t) + eulerer(t)   =E= mu1
-                                                            + mu11*2*ke(t)
-                                                            + mu12  *exp(ze(t))
-                                                            + mu111*3*ke(t)*ke(t)
-                                                            + mu112*2*ke(t)*exp(ze(t))
-                                                            + mu122  *exp(ze(t))*exp(ze(t))
-                                                            + mu1111*4*ke(t)*ke(t)*ke(t)
-                                                            + mu1112*3*ke(t)*ke(t)*exp(ze(t))
-                                                            + mu1122*2*ke(t)*exp(ze(t))*exp(ze(t))
-                                                            + mu1222  *exp(ze(t))*exp(ze(t))*exp(ze(t))
+                                    vf_deriv(t) + eulerer(t)   =E= coeffe("2")
+                                                            + coeffe("4")*2*ke(t)
+                                                            + coeffe("5")  *exp(ze(t))
+                                                            + coeffe("7")*3*ke(t)*ke(t)
+                                                            + coeffe("8")*2*ke(t)*exp(ze(t))
+                                                            + coeffe("9")  *exp(ze(t))*exp(ze(t))
+                                                            + coeffe("11")*4*ke(t)*ke(t)*ke(t)
+                                                            + coeffe("12")*3*ke(t)*ke(t)*exp(ze(t))
+                                                            + coeffe("13")*2*ke(t)*exp(ze(t))*exp(ze(t))
+                                                            + coeffe("14")  *exp(ze(t))*exp(ze(t))*exp(ze(t))
                                                              ;
 
 eqcs(t)..                            cs(t)**(-gammae) =e= (vf_deriv(t) + (1-deltae)*mut(t))/((1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1))) ;
@@ -454,28 +427,28 @@ eqcs(t)..                            cs(t)**(-gammae) =e= (vf_deriv(t) + (1-delt
 
 
 eqvfne_deriv(t,nz)..
-                                     vfne_deriv(t,nz) + eulererne(t,nz) =E= (mu1
-                                                            + mu11*2*ke(t+1)
-                                                            + mu12*exp(zne(t,nz))
-                                                            + mu111*3*ke(t+1)*ke(t+1)
-                                                            + mu112*2*ke(t+1)*exp(zne(t,nz))
-                                                            + mu122*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1111*4*ke(t+1)*ke(t+1)*ke(t+1)
-                                                            + mu1112*3*ke(t+1)*ke(t+1)*exp(zne(t,nz))
-                                                            + mu1122*2*ke(t+1)*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1222*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
+                                     vfne_deriv(t,nz) + eulererne(t,nz) =E= (coeffe("2")
+                                                            + coeffe("4")*2*ke(t+1)
+                                                            + coeffe("5")*exp(zne(t,nz))
+                                                            + coeffe("7")*3*ke(t+1)*ke(t+1)
+                                                            + coeffe("8")*2*ke(t+1)*exp(zne(t,nz))
+                                                            + coeffe("9")*exp(zne(t,nz))*exp(zne(t,nz))
+                                                            + coeffe("11")*4*ke(t+1)*ke(t+1)*ke(t+1)
+                                                            + coeffe("12")*3*ke(t+1)*ke(t+1)*exp(zne(t,nz))
+                                                            + coeffe("13")*2*ke(t+1)*exp(zne(t,nz))*exp(zne(t,nz))
+                                                            + coeffe("14")*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
                                                             )$(ord(t) LT card(t))
                                                             +
-                                                            (mu1
-                                                            + mu11*2*kfin
-                                                            + mu12*exp(zne(t,nz))
-                                                            + mu111*3*kfin*kfin
-                                                            + mu112*2*kfin*exp(zne(t,nz))
-                                                            + mu122*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1111*4*kfin*kfin*kfin
-                                                            + mu1112*3*kfin*kfin*exp(zne(t,nz))
-                                                            + mu1122*2*kfin*exp(zne(t,nz))*exp(zne(t,nz))
-                                                            + mu1222*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
+                                                            (coeffe("2")
+                                                            + coeffe("4")*2*kfin
+                                                            + coeffe("5")*exp(zne(t,nz))
+                                                            + coeffe("7")*3*kfin*kfin
+                                                            + coeffe("8")*2*kfin*exp(zne(t,nz))
+                                                            + coeffe("9")*exp(zne(t,nz))*exp(zne(t,nz))
+                                                            + coeffe("11")*4*kfin*kfin*kfin
+                                                            + coeffe("12")*3*kfin*kfin*exp(zne(t,nz))
+                                                            + coeffe("13")*2*kfin*exp(zne(t,nz))*exp(zne(t,nz))
+                                                            + coeffe("14")*exp(zne(t,nz))*exp(zne(t,nz))*exp(zne(t,nz))
                                                             )$(ord(t) EQ card(t))
                                                              ;
 
@@ -684,25 +657,11 @@ vfderivss = (sum(t,cs(t))/card(t) )**(-gammae)*
 
 
 
-*mu0.l = 100;
-mu1.l = vfderivss;
-*display mu1.l;
+*coeffe("1").l = 100;
+coeffe.l("2") = vfderivss;
+*display coeffe("2").l;
 $ontext
-mu0.l=mus0;
-mu1.l=mus1;
-mu2.l=mus2;
-mu11.l=mus11;
-mu12.l=mus12;
-mu22.l=mus22;
-mu111.l=mus111;
-mu112.l=mus112;
-mu122.l=mus122;
-mu222.l=mus222;
-mu1111.l=mus1111;
-mu1112.l=mus1112 ;
-mu1122.l=mus1122 ;
-mu1222.l=mus1222 ;
-mu2222.l=mus2222;
+coeffe.l(ncoeff)=coeffs(ncoeff);
 $offtext
 
 mut.l(t) = 0;
