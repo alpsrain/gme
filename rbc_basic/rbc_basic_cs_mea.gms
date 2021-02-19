@@ -57,7 +57,7 @@ zs(t) = log(zs(t));
 
 Parameters
 cmean
-ymean 
+ymean
 invmean
 ;
 cmean = sum(t, cs(t))/card(t) ;
@@ -664,18 +664,18 @@ rhozestd
 sigmazestd
 ;
 
-alphakem = sum(boot, alphakeboot(boot))/card(boot) ;
-alphakestd = (sum(boot, (alphakeboot(boot)-alphakem)*(alphakeboot(boot)-alphakem) )/card(boot) )**0.5 ;
-gammaem = sum(boot, gammaeboot(boot))/card(boot) ;
-gammaestd = (sum(boot, (gammaeboot(boot)-gammaem)*(gammaeboot(boot)-gammaem) )/card(boot) )**0.5 ;
-deltaem = sum(boot, deltaeboot(boot))/card(boot) ;
-deltaestd = (sum(boot, (deltaeboot(boot)-deltaem)*(deltaeboot(boot)-deltaem) )/card(boot) )**0.5 ;
-betaem = sum(boot, betaeboot(boot))/card(boot) ;
-betaestd = (sum(boot, (betaeboot(boot)-betaem)*(betaeboot(boot)-betaem) )/card(boot) )**0.5 ;
-rhozem = sum(boot, rhozeboot(boot))/card(boot) ;
-rhozestd = (sum(boot, (rhozeboot(boot)-rhozem)*(rhozeboot(boot)-rhozem) )/card(boot) )**0.5 ;
-sigmazem = sum(boot, sigmazeboot(boot))/card(boot) ;
-sigmazestd = (sum(boot, (sigmazeboot(boot)-sigmazem)*(sigmazeboot(boot)-sigmazem) )/card(boot) )**0.5 ;
+alphakem = sum(boot$(modelboot(boot) LE 2), alphakeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+alphakestd = (sum(boot$(modelboot(boot) LE 2), (alphakeboot(boot)-alphakem)*(alphakeboot(boot)-alphakem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+gammaem = sum(boot$(modelboot(boot) LE 2), gammaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+gammaestd = (sum(boot$(modelboot(boot) LE 2), (gammaeboot(boot)-gammaem)*(gammaeboot(boot)-gammaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+deltaem = sum(boot$(modelboot(boot) LE 2), deltaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+deltaestd = (sum(boot$(modelboot(boot) LE 2), (deltaeboot(boot)-deltaem)*(deltaeboot(boot)-deltaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+betaem = sum(boot$(modelboot(boot) LE 2), betaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+betaestd = (sum(boot$(modelboot(boot) LE 2), (betaeboot(boot)-betaem)*(betaeboot(boot)-betaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+rhozem = sum(boot$(modelboot(boot) LE 2), rhozeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+rhozestd = (sum(boot$(modelboot(boot) LE 2), (rhozeboot(boot)-rhozem)*(rhozeboot(boot)-rhozem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+sigmazem = sum(boot$(modelboot(boot) LE 2), sigmazeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
+sigmazestd = (sum(boot$(modelboot(boot) LE 2), (sigmazeboot(boot)-sigmazem)*(sigmazeboot(boot)-sigmazem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
 
 parameters
 alphakemse
@@ -709,6 +709,7 @@ deltaebias = (deltaem-delta_true)/delta_true;
 rhozebias = (rhozem-rho_true)/rho_true;
 sigmazebias = (sigmazem-sigma_true)/sigma_true;
 
+
 display alphakem, alphakestd, alphakemse ;
 display gammaem, gammaestd, gammaemse ;
 display deltaem, deltaestd, deltaemse ;
@@ -716,9 +717,9 @@ display betaem, betaestd, betaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
-
 display gammaeboot, deltaeboot, alphakeboot, betaeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
+
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -746,6 +747,7 @@ res_table("gamma","Bias")=gammaebias;
 res_table("gamma","MSE")=gammaemse;
 
 res_table("alpha","True")=alphak_true;
+res_table("alpha","Mean")=alphakem;
 res_table("alpha","S.D.")=alphakestd;
 res_table("alpha","Bias")=alphakebias;
 res_table("alpha","MSE")=alphakemse;
