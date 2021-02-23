@@ -265,9 +265,9 @@ errr(t)
 erri(t)
 erry(t)
 eulererk(t)
-eulerernek(t,nzb,nrb)
+eulerernek(t)
 eulererb(t)
-eulererneb(t,nzb,nrb)
+eulererneb(t)
 
 coeffe(ncoeff)
 
@@ -295,9 +295,9 @@ perrisv(t,k)
 perrysv(t,k)
 perrrsv(t,k)
 perreulererk(t,k)
-perreulerneerk(t,k,nzb,nrb)
+perreulerneerk(t,k)
 perreulererb(t,k)
-perreulerneerb(t,k,nzb,nrb)
+perreulerneerb(t,k)
 ;
 
 equations
@@ -359,13 +359,17 @@ eqvf_FOCb(t)
 
 eqeulererk(t)
 eqpeulererksv(t)
-eqeulerneerk(t,nzb,nrb)
-eqpeulerneerksv(t,nzb,nrb)
+eqeulerneerk(t)
+eqpeulerneerksv(t)
 
 eqeulererb(t)
 eqpeulererbsv(t)
-eqeulerneerb(t,nzb,nrb)
-eqpeulerneerbsv(t,nzb,nrb)
+eqeulerneerb(t)
+eqpeulerneerbsv(t)
+eqeulererkm
+eqeulererbm
+eqeulerneerkm
+eqeulerneerbm
 ;
 
 
@@ -384,9 +388,9 @@ eqentropie..     entropie =E=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - 0*predict*sum((k,t), perrisv(t,k)*log(1.e-5+perrisv(t,k)))
                                   - 0*predict*sum((k,t), perrysv(t,k)*log(1.e-5+perrysv(t,k)))
                                   - 100*sum((k,t), perreulererk(t,k)*log(1.e-5+perreulererk(t,k)))
-*                                  - sum((k,t,nzb,nrb), perreulerneerk(t,k,nzb,nrb)*log(1.e-5+perreulerneerk(t,k,nzb,nrb)))
+                                  - 100*sum((k,t,nzb,nrb), perreulerneerk(t,k)*log(1.e-5+perreulerneerk(t,k)))
                                   - 100*sum((k,t), perreulererb(t,k)*log(1.e-5+perreulererb(t,k)))
-*                                  - sum((k,t,nzb,nrb), perreulerneerb(t,k,nzb,nrb)*log(1.e-5+perreulerneerb(t,k,nzb,nrb)))
+                                  - 100*sum((k,t,nzb,nrb), perreulerneerb(t,k)*log(1.e-5+perreulerneerb(t,k)))
                                   ;
 
 
@@ -409,15 +413,15 @@ eqvf_derivb(t)..  vf_derivb(t)+ 0*eulererb(t) =E= coeffe("3")
 *                  + coeffe("31")*re(t)*re(t)
 ;
 
-eqcs(t)..          cs(t)**(-gammae) =E= vf_derivk(t)/(1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1)
-                                                     +ae*(ke(t+1)-ke(t))/ke(t)+ae/2*(ke(t+1)-ke(t))*(ke(t+1)-ke(t))/ke(t)/ke(t)) + 0*eulererk(t);
+eqcs(t)..          (cs(t)-eulererk(t))**(-gammae) =E= vf_derivk(t)/(1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1)
+                                                     +ae*(ke(t+1)-ke(t))/ke(t)+ae/2*(ke(t+1)-ke(t))*(ke(t+1)-ke(t))/ke(t)/ke(t)) ;
 
-eqbe(t)..          cs(t)**(-gammae)  =E=  ( vf_derivb(t) / (-2*alphar2e*be(t)*be(t+1)/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) LT card(t))
-                                  + ( vf_derivb(t) / (-2*alphar2e*be(t)*bfin/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) EQ card(t)) + 0*eulererb(t);
+eqbe(t)..          (cs(t)-eulererb(t))**(-gammae)  =E=  ( vf_derivb(t) / (-2*alphar2e*be(t)*be(t+1)/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) LT card(t))
+                                  + ( vf_derivb(t) / (-2*alphar2e*be(t)*bfin/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) EQ card(t)) ;
 
 
 
-eqvfne_derivk(t,nzb,nrb)..  vfne_derivk(t,nzb,nrb) + 0*eulerernek(t,nzb,nrb)  =E= (coeffe("2")
+eqvfne_derivk(t,nzb,nrb)..  vfne_derivk(t,nzb,nrb) + 0*eulerernek(t)  =E= (coeffe("2")
                                                               + coeffe("6")*2*ke(t+1)+ coeffe("7")*be(t+1)+ coeffe("8")*exp(zne(t,nzb))+ coeffe("9")*rne(t,nrb)
 *                                                              + coeffe("16")*3*ke(t+1)*ke(t+1)+ coeffe("17")*2*ke(t+1)*be(t+1)+ coeffe("18")*2*ke(t+1)*exp(zne(t,nzb))+ coeffe("19")*2*ke(t+1)*rne(t,nrb)
 *                                                              + coeffe("20")*be(t+1)*be(t+1)+ coeffe("21")*be(t+1)*exp(zne(t,nzb))+ coeffe("22")*be(t+1)*rne(t,nrb)
@@ -434,7 +438,7 @@ eqvfne_derivk(t,nzb,nrb)..  vfne_derivk(t,nzb,nrb) + 0*eulerernek(t,nzb,nrb)  =E
                                                               )$(ord(t) EQ card(t))
                                                              ;
 
-eqvfne_derivb(t,nzb,nrb)..  vfne_derivb(t,nzb,nrb) + 0*eulererneb(t,nzb,nrb)  =E= (coeffe("3")
+eqvfne_derivb(t,nzb,nrb)..  vfne_derivb(t,nzb,nrb) + 0*eulererneb(t)  =E= (coeffe("3")
                                                                + coeffe("7")*ke(t+1)+ coeffe("10")*2*be(t+1)+ coeffe("11")*exp(zne(t,nzb))+ coeffe("12")*rne(t,nrb)
 *                                                               + coeffe("17")*ke(t+1)*ke(t+1)
 *                                                               + coeffe("20")*ke(t+1)*2*be(t+1)+ coeffe("21")*ke(t+1)*exp(zne(t,nzb))+ coeffe("22")*ke(t+1)*rne(t,nrb)
@@ -453,9 +457,9 @@ eqvfne_derivb(t,nzb,nrb)..  vfne_derivb(t,nzb,nrb) + 0*eulererneb(t,nzb,nrb)  =E
                                                                 )$(ord(t) EQ card(t))
                                                              ;
 
-eqvf_FOCk(t)..       (cs(t)+ eulererk(t))**(-gammae)  =E= betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivk(t,nzb,nrb)) + 0*eulerernek(t,nzb,nrb))  ;
+eqvf_FOCk(t)..       (cs(t)+ eulerernek(t))**(-gammae)  =E= betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivk(t,nzb,nrb)))  ;
 
-eqvf_FOCb(t)..       (cs(t)+ eulererb(t))**(-gammae)  =E= -(re(t)+alphar2e*be(t)*be(t))* betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivb(t,nzb,nrb))+ 0*eulererneb(t,nzb,nrb))  ;
+eqvf_FOCb(t)..       (cs(t)+ eulererneb(t))**(-gammae)  =E= -(re(t)+alphar2e*be(t)*be(t))* betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivb(t,nzb,nrb)))  ;
 
 * Modeling next period TFP expectation
 eqzne(t,nzb)..        zne(t,nzb) =E=  rhoze * ze(t) + sigmaze*err0(nzb);
@@ -524,15 +528,19 @@ eqperrysv(t)..        1          =E= sum(k, perrysv(t,k)) ;
 
 eqeulererk(t)..          eulererk(t) =E= sum(k, perreulererk(t,k)*erreulerksv(k)) ;
 eqpeulererksv(t)..       1          =E= sum(k, perreulererk(t,k)) ;
+eqeulererkm..            sum(t,eulererk(t)) =E= 0 ;
 
-*eqeulerneerk(t,nzb,nrb)..          eulererneb(t,nzb,nrb) =E= sum(k, perreulerneerk(t,k,nzb,nrb)*erreulerneksv(k)) ;
-*eqpeulerneerksv(t,nzb,nrb)..       1          =E= sum(k, perreulerneerk(t,k,nzb,nrb)) ;
+eqeulerneerk(t)..          eulerernek(t) =E= sum(k, perreulerneerk(t,k)*erreulerneksv(k)) ;
+eqpeulerneerksv(t)..       1          =E= sum(k, perreulerneerk(t,k)) ;
+eqeulerneerkm..            sum(t,eulerernek(t)) =E= 0 ;
 
 eqeulererb(t)..          eulererb(t) =E= sum(k, perreulererb(t,k)*erreulerbsv(k)) ;
 eqpeulererbsv(t)..       1          =E= sum(k, perreulererb(t,k)) ;
+eqeulererbm..            sum(t,eulererb(t)) =E= 0 ;
 
-*eqeulerneerb(t,nzb,nrb)..          eulererneb(t,nzb,nrb) =E= sum(k, perreulerneerb(t,k,nzb,nrb)*erreulernebsv(k)) ;
-*eqpeulerneerbsv(t,nzb,nrb)..       1          =E= sum(k, perreulerneerb(t,k,nzb,nrb)) ;
+eqeulerneerb(t)..          eulererneb(t) =E= sum(k, perreulerneerb(t,k)*erreulernebsv(k)) ;
+eqpeulerneerbsv(t)..       1          =E= sum(k, perreulerneerb(t,k)) ;
+eqeulerneerbm..            sum(t,eulererneb(t)) =E= 0 ;
 
 
 model estimation /
@@ -587,12 +595,16 @@ eqvf_FOCk
 eqvf_FOCb
 eqeulererk
 eqpeulererksv
-*eqeulerneerk
-*eqpeulerneerksv
+eqeulerneerk
+eqpeulerneerksv
 eqeulererb
 eqpeulererbsv
-*eqeulerneerb
-*eqpeulerneerbsv
+eqeulerneerb
+eqpeulerneerbsv
+eqeulererkm
+eqeulererbm
+eqeulerneerkm
+eqeulerneerbm
 /
 ;
 
@@ -710,7 +722,7 @@ vfderivkss
 vfderivbss
 ref;
 
-loop(boot$( (titi(boot) EQ 0) and (ord(boot)   )),
+loop(boot$( (titi(boot) EQ 0) and (ord(boot) le 20   )),
 cs(t) = css(t,boot);
 ys(t) = yss(t,boot);
 is(t) = iss(t,boot);
@@ -791,9 +803,9 @@ errz.l(t)         = 0 ;
 errr.l(t)         = 0 ;
 erri.l(t)         = 0 ;
 eulererk.l(t)      = 0 ;
-eulerernek.l(t,nzb,nrb) = 0 ;
+eulerernek.l(t) = 0 ;
 eulererb.l(t)      = 0 ;
-eulererneb.l(t,nzb,nrb) = 0 ;
+eulererneb.l(t) = 0 ;
 pbetasv.l(k)            = 1/card(k) ;
 palphaksv.l(k)          = 1/card(k) ;
 pgammasv.l(k)           = 1/card(k) ;
@@ -809,9 +821,9 @@ perrrsv.l(t,k)          = 1/card(k) ;
 perrisv.l(t,k)          = 1/card(k) ;
 perrysv.l(t,k)          = 1/card(k) ;
 perreulererk.l(t,k)      = 1/card(k) ;
-perreulerneerk.l(t,k,nzb,nrb) = 1/card(k) ;
+perreulerneerk.l(t,k) = 1/card(k) ;
 perreulererb.l(t,k)      = 1/card(k) ;
-perreulerneerb.l(t,k,nzb,nrb) = 1/card(k) ;
+perreulerneerb.l(t,k) = 1/card(k) ;
 
 
 vf_derivk.l(t) =  cs(t)**(-gammae.l)*
@@ -837,7 +849,7 @@ predict = 0.1;
 *erreulersv("1")         = -0.1*vfderivss ;
 *erreulersv("3")         = 0.1*vfderivss ;
 *erreulernesv("1")       = -0.1*vfderivss ;
-*erreulernesv("3")       = 0.1*vfderivss;
+*erreulernesv("3")       = 0.1*vfderivss ;
 
 ref= (sum(t,cs(t))/card(t))**(-gammasv("2"));
 
@@ -848,12 +860,12 @@ errysv("1")         = -0*(sum(t,is(t))/card(t));
 errysv("3")         = 0*(sum(t,is(t))/card(t));
 erreulerksv("1")         = -0.2*sum(t,cs(t))/card(t) ;
 erreulerksv("3")         = 0.2*sum(t,cs(t))/card(t);
-*erreulerneksv("1")       = -0.1*ref;
-*erreulerneksv("3")       = 0.1*ref;
 erreulerbsv("1")         = -0.2*sum(t,cs(t))/card(t);
 erreulerbsv("3")         = 0.2*sum(t,cs(t))/card(t);
-*erreulernebsv("1")       = -0.1*ref;
-*erreulernebsv("3")       = 0.1*ref;
+erreulerneksv("1")       = -0.2*sum(t,cs(t))/card(t);
+erreulerneksv("3")       = 0.2*sum(t,cs(t))/card(t);
+erreulernebsv("1")       = -0.2*sum(t,cs(t))/card(t);
+erreulernebsv("3")       = 0.2*sum(t,cs(t))/card(t);
 
 
 solve estimation using nlp maximising entropie;
