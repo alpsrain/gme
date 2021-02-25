@@ -4,7 +4,7 @@
 *----------------
 Set ttot    / 1*150/
 t(ttot)     / 51*150 / ;
-Set boot  /1*20 /;
+Set boot  /1*100 /;
 
 
 Parameters
