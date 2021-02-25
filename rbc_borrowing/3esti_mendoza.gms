@@ -1,5 +1,6 @@
 display sigmar_true,alphar1,alphar1,a_true;
 
+
 $ontext
 *----------------
 * data simulation
@@ -723,7 +724,7 @@ ref;
 
 
 
-loop(boot$( (titi(boot) EQ 0) and (ord(boot) LE 5)),
+loop(boot$( (titi(boot) EQ 0) and (ord(boot) )),
 cs(t) = css(t,boot);
 ys(t) = yss(t,boot);
 is(t) = iss(t,boot);
@@ -872,8 +873,6 @@ erreulerksv("3")         = +0.1;
 erreulerbsv("1")         = -0.1;
 erreulerbsv("3")         = +0.1;
 
-
-
 *estimation.optfile = 1 ;
 
 solve estimation using nlp maximising entropie;
@@ -896,9 +895,6 @@ modelboot(boot) = estimation.modelstat ;
 ) ;
 
 
-
-
-
 parameters
 alphakem
 gammaem
@@ -918,6 +914,8 @@ alphar1m
 alphar1std
 alphar2m
 alphar2std
+aem
+aestd
 ;
 
 alphakem = sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), alphakeboot(boot))/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), 1) ;
@@ -938,6 +936,8 @@ alphar1m = sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), alphar1eboot
 alphar1std = (sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), (alphar1eboot(boot)-alphar1m)*(alphar1eboot(boot)-alphar1m) )/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)),1) )**0.5 ;
 alphar2m = sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), alphar2eboot(boot))/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)),1) ;
 alphar2std = (sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), (alphar2eboot(boot)-alphar2m)*(alphar2eboot(boot)-alphar2m) )/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)),1) )**0.5 ;
+aem = sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), aeboot(boot))/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)),1) ;
+aestd = (sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)), (aeboot(boot)-aem)*(aeboot(boot)-aem) )/sum(boot$((modelboot(boot) LE 2) and (titi(boot) EQ 0)),1) )**0.5 ;
 
 parameters
 alphakemse
@@ -949,6 +949,7 @@ sigmazemse
 sigmaremse
 alphar1mse
 alphar2mse
+aemse
 ;
 
 alphakemse = (power((alphakem-alphak_true),2)+alphakestd**2)**0.5;
@@ -960,6 +961,32 @@ sigmazemse = (power((sigmazem-sigmaz_true),2)+sigmazestd**2)**0.5;
 sigmaremse = (power((sigmarem-sigmar_true),2)+sigmarestd**2)**0.5;
 alphar1mse = (power((alphar1m-alphar1),2)+alphar1std**2)**0.5;
 alphar2mse = (power((alphar2m-alphar2),2)+alphar2std**2)**0.5;
+aemse = (power((aem-a_true),2)+aestd**2)**0.5;
+
+parameters
+alphakebias
+gammaebias
+betaebias
+deltaebias
+rhozebias
+sigmazebias
+sigmarebias
+alphar1bias
+alphar2bias
+abias
+;
+
+alphakebias = (alphakem-alphak_true)/alphak_true;
+gammaebias = (gammaem-gamma_true)/gamma_true;
+betaebias = (betaem-beta_true)/beta_true;
+deltaebias = (deltaem-delta_true)/delta_true;
+rhozebias = (rhozem-rhoz_true)/rhoz_true;
+sigmazebias = (sigmazem-sigmaz_true)/sigmaz_true;
+sigmarebias = (sigmarem-sigmar_true)/sigmar_true;
+alphar1bias = (alphar1m-alphar1)/alphar1;
+alphar2bias = (alphar2m-alphar2)/alphar2;
+abias = (aem-a_true)/a_true;
+
 
 display alphakem, alphakestd, alphakemse ;
 display gammaem, gammaestd, gammaemse ;
@@ -970,17 +997,90 @@ display sigmazem, sigmazestd, sigmazemse ;
 display sigmarem, sigmarestd, sigmaremse ;
 display alphar1m, alphar1std, alphar1mse ;
 display alphar2m, alphar2std, alphar2mse ;
+display aem,aestd,aemse;
 
 display gammaeboot, deltaeboot, alphakeboot, betaeboot, rhozeboot, sigmazeboot, sigmareboot,alphar1eboot, alphar2eboot,aeboot, modelboot ;
 
 *execute_unload 'res_smolyak_100_true.gdx';
 
+Parameters
+res(boot,*);
+
+res(boot,"betae") = betaeboot(boot) ;
+res(boot,"gammae") = gammaeboot(boot) ;
+res(boot,"alphae") = alphakeboot(boot) ;
+res(boot,"deltae") = deltaeboot(boot) ;
+res(boot,"rhoe") = rhozeboot(boot);
+res(boot,"sigmaze") = sigmazeboot(boot);
+res(boot,"sigmare") = sigmareboot(boot);
+res(boot,"alphar1") = alphar1eboot(boot);
+res(boot,"alphar2") = alphar2eboot(boot);
+res(boot,"a") = aeboot(boot);
+res(boot,"solvestat") = modelboot(boot);
+
+Parameters
+res_table(*,*);
+res_table("beta","True")=beta_true;
+res_table("beta","Mean")=betaem;
+res_table("beta","S.D.")=betaestd;
+res_table("beta","Bias")=betaebias;
+res_table("beta","MSE")=betaemse;
+
+res_table("gamma","True")=gamma_true;
+res_table("gamma","Mean")=gammaem;
+res_table("gamma","S.D.")=gammaestd;
+res_table("gamma","Bias")=gammaebias;
+res_table("gamma","MSE")=gammaemse;
+
+res_table("alpha","True")=alphak_true;
+res_table("alpha","Mean")=alphakem;
+res_table("alpha","S.D.")=alphakestd;
+res_table("alpha","Bias")=alphakebias;
+res_table("alpha","MSE")=alphakemse;
+
+res_table("delta","True")=delta_true;
+res_table("delta","Mean")=deltaem;
+res_table("delta","S.D.")=deltaestd;
+res_table("delta","Bias")=deltaebias;
+res_table("delta","MSE")=deltaemse;
+
+res_table("rho","True")=rhoz_true;
+res_table("rho","Mean")=rhozem;
+res_table("rho","S.D.")=rhozestd;
+res_table("rho","Bias")=rhozebias;
+res_table("rho","MSE")=rhozemse;
+
+res_table("sigmaz","True")=sigmaz_true;
+res_table("sigmaz","Mean")=sigmazem;
+res_table("sigmaz","S.D.")=sigmazestd;
+res_table("sigmaz","Bias")=sigmazebias;
+res_table("sigmaz","MSE")=sigmazemse;
+
+res_table("sigmar","True")=sigmar_true;
+res_table("sigmar","Mean")=sigmarem;
+res_table("sigmar","S.D.")=sigmarestd;
+res_table("sigmar","Bias")=sigmarebias;
+res_table("sigmar","MSE")=sigmaremse;
+
+res_table("alphar1","True")=alphar1;
+res_table("alphar1","Mean")=alphar1m;
+res_table("alphar1","S.D.")=alphar1std;
+res_table("alphar1","Bias")=alphar1bias;
+res_table("alphar1","MSE")=alphar1mse;
+
+res_table("alphar2","True")=alphar2;
+res_table("alphar2","Mean")=alphar2m;
+res_table("alphar2","S.D.")=alphar2std;
+res_table("alphar2","Bias")=alphar2bias;
+res_table("alphar2","MSE")=alphar2mse;
+
+res_table("a","True")=a_true;
+res_table("a","Mean")=aem;
+res_table("a","S.D.")=aestd;
+res_table("a","Bias")=abias;
+res_table("a","MSE")=aemse;
+
+execute_unload 'rbc-borrowing-kcost-alex.gdx',res,res_table;
 
 
 
-
-
-
-
-
-display erreulerksv ;

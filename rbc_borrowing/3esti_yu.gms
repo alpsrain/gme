@@ -387,10 +387,10 @@ eqentropie..     entropie =E=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - predict*sum((k,t), perrrsv(t,k)*log(1.e-5+perrrsv(t,k)))
                                   - 0*predict*sum((k,t), perrisv(t,k)*log(1.e-5+perrisv(t,k)))
                                   - 0*predict*sum((k,t), perrysv(t,k)*log(1.e-5+perrysv(t,k)))
-                                  - 100*sum((k,t), perreulererk(t,k)*log(1.e-5+perreulererk(t,k)))
-                                  - 100*sum((k,t,nzb,nrb), perreulerneerk(t,k)*log(1.e-5+perreulerneerk(t,k)))
-                                  - 100*sum((k,t), perreulererb(t,k)*log(1.e-5+perreulererb(t,k)))
-                                  - 100*sum((k,t,nzb,nrb), perreulerneerb(t,k)*log(1.e-5+perreulerneerb(t,k)))
+*                                  - 100*sum((k,t), perreulererk(t,k)*log(1.e-5+perreulererk(t,k)))
+                                  - 100*sum((k,t), perreulerneerk(t,k)*log(1.e-5+perreulerneerk(t,k)))
+*                                  - 100*sum((k,t), perreulererb(t,k)*log(1.e-5+perreulererb(t,k)))
+                                  - 100*sum((k,t), perreulerneerb(t,k)*log(1.e-5+perreulerneerb(t,k)))
                                   ;
 
 
@@ -413,10 +413,10 @@ eqvf_derivb(t)..  vf_derivb(t)+ 0*eulererb(t) =E= coeffe("3")
 *                  + coeffe("31")*re(t)*re(t)
 ;
 
-eqcs(t)..          (cs(t)-eulererk(t))**(-gammae) =E= vf_derivk(t)/(1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1)
+eqcs(t)..          (cs(t)-0*eulererk(t))**(-gammae) =E= vf_derivk(t)/(1-deltae + ((1/betae+deltae-1)/alphake)*exp(ze(t))*alphake*ke(t)**(alphake-1)
                                                      +ae*(ke(t+1)-ke(t))/ke(t)+ae/2*(ke(t+1)-ke(t))*(ke(t+1)-ke(t))/ke(t)/ke(t)) ;
 
-eqbe(t)..          (cs(t)-eulererb(t))**(-gammae)  =E=  ( vf_derivb(t) / (-2*alphar2e*be(t)*be(t+1)/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) LT card(t))
+eqbe(t)..          (cs(t)-0*eulererb(t))**(-gammae)  =E=  ( vf_derivb(t) / (-2*alphar2e*be(t)*be(t+1)/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) LT card(t))
                                   + ( vf_derivb(t) / (-2*alphar2e*be(t)*bfin/((re(t)+alphar2e*be(t)*be(t))*(re(t)+alphar2e*be(t)*be(t)))-1))$(ord(t) EQ card(t)) ;
 
 
@@ -457,9 +457,9 @@ eqvfne_derivb(t,nzb,nrb)..  vfne_derivb(t,nzb,nrb) + 0*eulererneb(t)  =E= (coeff
                                                                 )$(ord(t) EQ card(t))
                                                              ;
 
-eqvf_FOCk(t)..       (cs(t)+ eulerernek(t))**(-gammae)  =E= betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivk(t,nzb,nrb)))  ;
+eqvf_FOCk(t)..       (cs(t)- eulerernek(t))**(-gammae)  =E= betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivk(t,nzb,nrb)))  ;
 
-eqvf_FOCb(t)..       (cs(t)+ eulererneb(t))**(-gammae)  =E= -(re(t)+alphar2e*be(t)*be(t))* betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivb(t,nzb,nrb)))  ;
+eqvf_FOCb(t)..       (cs(t)- eulererneb(t))**(-gammae)  =E= -(re(t)+alphar2e*be(t)*be(t))* betae*sum((nzb,nrb),probz(nzb)*probr(nrb)*(vfne_derivb(t,nzb,nrb)))  ;
 
 * Modeling next period TFP expectation
 eqzne(t,nzb)..        zne(t,nzb) =E=  rhoze * ze(t) + sigmaze*err0(nzb);
@@ -593,23 +593,23 @@ eqvfne_derivk
 eqvfne_derivb
 eqvf_FOCk
 eqvf_FOCb
-eqeulererk
-eqpeulererksv
+*eqeulererk
+*eqpeulererksv
 eqeulerneerk
 eqpeulerneerksv
-eqeulererb
-eqpeulererbsv
+*eqeulererb
+*eqpeulererbsv
 eqeulerneerb
 eqpeulerneerbsv
-eqeulererkm
-eqeulererbm
+*eqeulererkm
+*eqeulererbm
 eqeulerneerkm
 eqeulerneerbm
 /
 ;
 
 *initiate chebyshev coefficient for estimation
-$ontext
+*$ontext
 betasv("1")   = 0.97 ;
 betasv("2")   = 0.98 ;
 betasv("3")   = 0.99 ;
@@ -618,7 +618,7 @@ alphaksv("2")   = 0.36 ;
 alphaksv("3")   = 0.5 ;
 gammasv("1")    = 0.1 ;
 gammasv("2")    = 0.75 ;
-gammasv("3")    = 3 ;
+gammasv("3")    = 1.5 ;
 deltasv("1")    = 0.001 ;
 deltasv("2")    = 0.025 ;
 deltasv("3")    = 0.05 ;
@@ -629,20 +629,20 @@ sigmazsv("1")   = 0.001 ;
 sigmazsv("2")   = 0.04 ;
 sigmazsv("3")   = 0.08 ;
 sigmarsv("1")   = 0.0001 ;
-sigmarsv("2")   = 0.004 ;
-sigmarsv("3")   = 0.008;
+sigmarsv("2")   = 0.003 ;
+sigmarsv("3")   = 0.006;
 alphar1sv("1")   = 1.001 ;
 alphar1sv("2")   = 1.012 ;
 alphar1sv("3")   = 1.025;
 alphar2sv("1")   = 0.001 ;
 alphar2sv("2")   = 0.003;
 alphar2sv("3")   = 0.005;
-asv("1")   = 10 ;
-asv("2")   = 15;
-asv("3")   = 20;
-$offtext
+asv("1")   = 0 ;
+asv("2")   = 0.5;
+asv("3")   = 1;
+*$offtext
 
-*$ontext
+$ontext
 betasv("1")   = 0.97 ;
 betasv("2")   = 0.98 ;
 betasv("3")   = 0.99 ;
@@ -673,7 +673,7 @@ alphar2sv("3")   = 0.015;
 asv("1")   = 0 ;
 asv("2")   = 0.5 ;
 asv("3")   = 1 ;
-*$offtext
+$offtext
 
 z0e(nzb) = err0(nzb) * sigmazsv("2");
 r0e(nrb) = errr0(nrb)* sigmarsv("2");
@@ -722,7 +722,7 @@ vfderivkss
 vfderivbss
 ref;
 
-loop(boot$( (titi(boot) EQ 0) and (ord(boot) le 20   )),
+loop(boot$( (titi(boot) EQ 0) and (ord(boot)   )),
 cs(t) = css(t,boot);
 ys(t) = yss(t,boot);
 is(t) = iss(t,boot);
@@ -858,15 +858,14 @@ errisv("1")         = -0.0*(sum(t,is(t))/card(t));
 errisv("3")         = 0.0*(sum(t,is(t))/card(t));
 errysv("1")         = -0*(sum(t,is(t))/card(t));
 errysv("3")         = 0*(sum(t,is(t))/card(t));
-erreulerksv("1")         = -0.2*sum(t,cs(t))/card(t) ;
-erreulerksv("3")         = 0.2*sum(t,cs(t))/card(t);
-erreulerbsv("1")         = -0.2*sum(t,cs(t))/card(t);
-erreulerbsv("3")         = 0.2*sum(t,cs(t))/card(t);
+*erreulerksv("1")         = -0.2*sum(t,cs(t))/card(t) ;
+*erreulerksv("3")         = 0.2*sum(t,cs(t))/card(t);
+*erreulerbsv("1")         = -0.2*sum(t,cs(t))/card(t);
+*erreulerbsv("3")         = 0.2*sum(t,cs(t))/card(t);
 erreulerneksv("1")       = -0.2*sum(t,cs(t))/card(t);
 erreulerneksv("3")       = 0.2*sum(t,cs(t))/card(t);
 erreulernebsv("1")       = -0.2*sum(t,cs(t))/card(t);
 erreulernebsv("3")       = 0.2*sum(t,cs(t))/card(t);
-
 
 solve estimation using nlp maximising entropie;
 
@@ -964,6 +963,7 @@ sigmazebias
 sigmarebias
 alphar1bias
 alphar2bias
+abias
 ;
 
 alphakebias = (alphakem-alphak_true)/alphak_true;
@@ -975,6 +975,7 @@ sigmazebias = (sigmazem-sigmaz_true)/sigmaz_true;
 sigmarebias = (sigmarem-sigmar_true)/sigmar_true;
 alphar1bias = (alphar1m-alphar1)/alphar1;
 alphar2bias = (alphar2m-alphar2)/alphar2;
+abias = (aem-a_true)/a_true;
 
 
 display alphakem, alphakestd, alphakemse ;
@@ -986,6 +987,7 @@ display sigmazem, sigmazestd, sigmazemse ;
 display sigmarem, sigmarestd, sigmaremse ;
 display alphar1m, alphar1std, alphar1mse ;
 display alphar2m, alphar2std, alphar2mse ;
+display aem,aestd,aemse;
 
 display gammaeboot, deltaeboot, alphakeboot, betaeboot, rhozeboot, sigmazeboot, sigmareboot,alphar1eboot, alphar2eboot,aeboot, modelboot ;
 
@@ -1003,6 +1005,7 @@ res(boot,"sigmaze") = sigmazeboot(boot);
 res(boot,"sigmare") = sigmareboot(boot);
 res(boot,"alphar1") = alphar1eboot(boot);
 res(boot,"alphar2") = alphar2eboot(boot);
+res(boot,"a") = aeboot(boot);
 res(boot,"solvestat") = modelboot(boot);
 
 Parameters
@@ -1061,7 +1064,14 @@ res_table("alphar2","S.D.")=alphar2std;
 res_table("alphar2","Bias")=alphar2bias;
 res_table("alphar2","MSE")=alphar2mse;
 
-execute_unload 'rbc-borrowing-yu.gdx',res,res_table;
+res_table("a","True")=a_true;
+res_table("a","Mean")=aem;
+res_table("a","S.D.")=aestd;
+res_table("a","Bias")=abias;
+res_table("a","MSE")=aemse;
+
+
+execute_unload 'rbc-borrowing-kcost-true-yu.gdx',res,res_table;
 
 
 
