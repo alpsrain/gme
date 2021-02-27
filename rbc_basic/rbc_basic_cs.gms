@@ -37,6 +37,7 @@ $gdxIn simdata.gdx
 $LOAD series
 $GDXIN
 
+
 Parameters
 cs(t)
 ys(t)
@@ -313,6 +314,9 @@ eqpeulerneersv(t,nz)
 eqerry(t)
 eqperrysv(t)
 
+eqeulererm
+eqeulerneerm
+
 ;
 
 Parameters
@@ -327,8 +331,8 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - predict*sum(k, psigmazsv(k)*LOG(1.e-5+psigmazsv(k)))
                                   - predict*sum(k, pbetasv(k)*LOG(1.e-5+pbetasv(k)))
                                   - predict*sum((k,t)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perrzsv(t,k)*log(1.e-5+perrzsv(t,k)))
-                                  - sum((k,t)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
-                                  - sum((k,t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perreulerneer(t,k,nz)*log(1.e-5+perreulerneer(t,k,nz)))
+                                  - 100*sum((k,t)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
+                                  - 100*sum((k,t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perreulerneer(t,k,nz)*log(1.e-5+perreulerneer(t,k,nz)))
 *                                  - sum((k,t)$((ord(t) GE tmin) and (ord(t) LE Tmax) ), perrysv(t,k)*log(1.e-5+perrysv(t,k)))
 ;
 
@@ -406,9 +410,12 @@ eqperrzsv(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..        1          =E= su
 
 eqeulerer(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..          eulerer(t) =E= sum(k, perreulerer(t,k)*erreulersv(k)) ;
 eqpeulerersv(t)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..       1          =E= sum(k, perreulerer(t,k)) ;
+eqeulererm..                                                     sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ),eulerer(t)) =E= 0 ;
 
 eqeulerneer(t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..          eulererne(t,nz) =E= sum(k, perreulerneer(t,k,nz)*erreulernesv(k)) ;
 eqpeulerneersv(t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) )..       1          =E= sum(k, perreulerneer(t,k,nz)) ;
+eqeulerneerm ..                                                       sum((t,nz)$((ord(t) GE tmin) and (ord(t) LE Tmax) ),eulererne(t,nz)) =E= 0 ;
+
 
 
 model estimation /
@@ -444,6 +451,8 @@ eqeulerer
 eqpeulerersv
 eqeulerneer
 eqpeulerneersv
+eqeulererm
+eqeulerneerm
 / ;
 
 
@@ -505,8 +514,8 @@ errzsv("1")             = zmin ;
 errzsv("3")             = zmax ;
 
 kbar   = 1;
-kmax     = kbar*1.5 ;
-kmin     = kbar*0.5 ;
+kmax   = kbar*1.5 ;
+kmin   = kbar*0.5 ;
 
 
 sets boot / 1*100/ ;
@@ -603,7 +612,7 @@ phizne.l(nza,t,nz) = 2*phizne.l("2",t,nz)*phizne.l(nza-1,t,nz)-phizne.l(nza-2,t,
 coeffe.l(nka,nza) =  0 ;
 coeffe.l("1","1") = (sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ), cs(t))/(tmax-tmin) )**(-gammae.l);
 
-predict = 0.01 ;
+predict = 0.1 ;
 
 erreulersv("1")         = -0.2*sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ), cs(t))/(tmax-tmin);
 erreulersv("3")         = 0.2*sum(t$((ord(t) GE tmin) and (ord(t) LE Tmax) ), cs(t))/(tmax-tmin);
@@ -644,18 +653,19 @@ rhozestd
 sigmazestd
 ;
 
-alphakem = sum(boot$(modelboot(boot) LE 2), alphakeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-alphakestd = (sum(boot$(modelboot(boot) LE 2), (alphakeboot(boot)-alphakem)*(alphakeboot(boot)-alphakem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
-gammaem = sum(boot$(modelboot(boot) LE 2), gammaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-gammaestd = (sum(boot$(modelboot(boot) LE 2), (gammaeboot(boot)-gammaem)*(gammaeboot(boot)-gammaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
-deltaem = sum(boot$(modelboot(boot) LE 2), deltaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-deltaestd = (sum(boot$(modelboot(boot) LE 2), (deltaeboot(boot)-deltaem)*(deltaeboot(boot)-deltaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
-betaem = sum(boot$(modelboot(boot) LE 2), betaeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-betaestd = (sum(boot$(modelboot(boot) LE 2), (betaeboot(boot)-betaem)*(betaeboot(boot)-betaem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
-rhozem = sum(boot$(modelboot(boot) LE 2), rhozeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-rhozestd = (sum(boot$(modelboot(boot) LE 2), (rhozeboot(boot)-rhozem)*(rhozeboot(boot)-rhozem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
-sigmazem = sum(boot$(modelboot(boot) LE 2), sigmazeboot(boot))/card(boot$(modelboot(boot) LE 2)) ;
-sigmazestd = (sum(boot$(modelboot(boot) LE 2), (sigmazeboot(boot)-sigmazem)*(sigmazeboot(boot)-sigmazem) )/card(boot$(modelboot(boot) LE 2)) )**0.5 ;
+alphakem = sum(boot$((modelboot(boot) LE 2) ), alphakeboot(boot))/sum(boot$((modelboot(boot) LE 2) ), 1) ;
+alphakestd = (sum(boot$((modelboot(boot) LE 2) ), (alphakeboot(boot)-alphakem)*(alphakeboot(boot)-alphakem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+gammaem = sum(boot$((modelboot(boot) LE 2) ), gammaeboot(boot))/sum(boot$((modelboot(boot) LE 2) ),1) ;
+gammaestd = (sum(boot$((modelboot(boot) LE 2) ), (gammaeboot(boot)-gammaem)*(gammaeboot(boot)-gammaem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+deltaem = sum(boot$((modelboot(boot) LE 2) ), deltaeboot(boot))/sum(boot$((modelboot(boot) LE 2) ),1) ;
+deltaestd = (sum(boot$((modelboot(boot) LE 2) ), (deltaeboot(boot)-deltaem)*(deltaeboot(boot)-deltaem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+betaem = sum(boot$((modelboot(boot) LE 2) ), betaeboot(boot))/sum(boot$((modelboot(boot) LE 2) ),1) ;
+betaestd = (sum(boot$((modelboot(boot) LE 2) ), (betaeboot(boot)-betaem)*(betaeboot(boot)-betaem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+rhozem = sum(boot$((modelboot(boot) LE 2) ), rhozeboot(boot))/sum(boot$((modelboot(boot) LE 2) ),1) ;
+rhozestd = (sum(boot$((modelboot(boot) LE 2) ), (rhozeboot(boot)-rhozem)*(rhozeboot(boot)-rhozem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+sigmazem = sum(boot$((modelboot(boot) LE 2) ), sigmazeboot(boot))/sum(boot$((modelboot(boot) LE 2) ),1) ;
+sigmazestd = (sum(boot$((modelboot(boot) LE 2) ), (sigmazeboot(boot)-sigmazem)*(sigmazeboot(boot)-sigmazem) )/sum(boot$((modelboot(boot) LE 2) ),1) )**0.5 ;
+
 
 parameters
 alphakemse
@@ -750,7 +760,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'rbc-cs-other.gdx';
+execute_unload 'rbc-cs-other.gdx',res,res_table,elapsed ;
 *$libinclude xlexport res res.xlsx res!a1:h101
 
 
