@@ -30,3 +30,5 @@ rbc_basic/.DS_Store
 rbc_borrowing/.DS_Store
 
 .DS_Store
+
+*.g00
