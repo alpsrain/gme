@@ -599,7 +599,7 @@ mut.lo(t) = 0;
 mut.up(t) = +inf;
 invmin = 0.025*0.95;
 
-predict = 0.01;
+predict = 0.1;
 
 erreulersv("1")         = -0.2*sum(t,cs(t))/card(t);
 erreulersv("3")         = 0.2*sum(t,cs(t))/card(t);
@@ -665,9 +665,9 @@ display deltaem, deltaestd, deltaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -705,7 +705,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'res-invmin-vf-solution-fix-gamma.gdx',res,res_table,elapsed ;
-$libinclude xlexport res res1.xlsx res!a1:h101
+execute_unload 'res-invmin-vf-solution-new-gme-old-data.gdx',res,res_table,elapsed ;
+*$libinclude xlexport res res1.xlsx res!a1:h101
 
 

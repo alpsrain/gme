@@ -13,7 +13,7 @@ delta_true=0.025;
 rhoz_true=0;
 rhor_true=0;
 sigmaz_true=0.04;
-a_true=0;
+a_true=0.1;
 *rhor_true=0.99;
 sigmar_true=0.003;
 

@@ -17,6 +17,7 @@ Set t    / 1*10000/
 Parameters
 series(t,name)
 $gdxIn simdata.gdx
+*$gdxIn simdata_invmin.gdx
 $LOAD series
 $GDXIN
 
@@ -541,9 +542,10 @@ display deltaem, deltaestd, deltaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
+
 display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -581,7 +583,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'rbc-cs-fix-gamma.gdx',res,res_table,elapsed ;
+execute_unload 'rbc-cs-old-gme-old-data.gdx',res,res_table,elapsed ;
 
 *$libinclude xlexport res res4.xlsx res!a1:h101
 

@@ -635,7 +635,6 @@ modelboot(boot) = estimation.solvestat ;
 
 ) ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 
 parameters

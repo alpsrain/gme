@@ -715,7 +715,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'rbc-vf.gdx',res,res_table;
+execute_unload 'rbc-vf.gdx',res,res_table,elapsed;
 
 *execute_unload 'res_smolyak_100_true.gdx';
 

@@ -565,9 +565,11 @@ display deltaem, deltaestd, deltaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
+
+
 display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -605,7 +607,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'rbc-cs-invmin-fix-gamma.gdx',res,res_table,elapsed ;
+execute_unload 'rbc-cs-invmin-new-gme-new-data.gdx',res,res_table,elapsed ;
 $libinclude xlexport res res2.xlsx res!a1:h101
 
 

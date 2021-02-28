@@ -587,10 +587,8 @@ eqerri
 eqperrisv
 eqerry
 eqperrysv
-*eqvf
 eqvf_derivk
 eqvf_derivb
-*eqvfne
 eqvfne_derivk
 eqvfne_derivb
 eqvf_FOCk
@@ -599,8 +597,6 @@ eqvf_FOCb
 *eqpeulererksv
 eqeulerneerk
 eqpeulerneerksv
-*eqeulererb
-*eqpeulererbsv
 eqeulerneerb
 eqpeulerneerbsv
 *eqeulererkm
@@ -611,7 +607,7 @@ eqeulerneerbm
 ;
 
 *initiate chebyshev coefficient for estimation
-*$ontext
+$ontext
 betasv("1")   = 0.97 ;
 betasv("2")   = 0.98 ;
 betasv("3")   = 0.99 ;
@@ -642,9 +638,9 @@ alphar2sv("3")   = 0.005;
 asv("1")   = 0 ;
 asv("2")   = 0.1;
 asv("3")   = 0.2;
-*$offtext
+$offtext
 
-$ontext
+*$ontext
 betasv("1")   = 0.97 ;
 betasv("2")   = 0.98 ;
 betasv("3")   = 0.99 ;
@@ -675,7 +671,7 @@ alphar2sv("3")   = 0.015;
 asv("1")   = 0 ;
 asv("2")   = 0.5 ;
 asv("3")   = 1 ;
-$offtext
+*$offtext
 
 z0e(nzb) = err0(nzb) * sigmazsv("2");
 r0e(nrb) = errr0(nrb)* sigmarsv("2");
@@ -762,6 +758,7 @@ alphar2e.up  = alphar2sv("3") ;
 ae.up  = asv("3") ;
 
 rhoze.fx = 0;
+*ae.fx=0 ;
 *betae.fx=beta_true;
 *gammae.fx=gamma_true;
 *alphake.fx=alphak_true;
@@ -1073,7 +1070,7 @@ res_table("a","Bias")=abias;
 res_table("a","MSE")=aemse;
 
 
-execute_unload 'rbc-borrowing-kcost-true-yu.gdx',res,res_table,elapsed;
+execute_unload 'rbc-borrowing-other-yu.gdx',res,res_table,elapsed;
 
 
 

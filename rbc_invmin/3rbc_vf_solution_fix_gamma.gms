@@ -171,6 +171,7 @@ vfs_deriv(t,boot) = coeffs("2")
 yss(t,boot) = ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*kss(t,boot)**alphak  ;
 uss(t,boot) = vfs_deriv(t,boot) / (1-delta + ((1/beta+delta-1)/alphak)*exp(zss(t,boot))*alphak*kss(t,boot)**(alphak-1)) ;
 css(t,boot) = uss(t,boot)**(-1/gamma) ;
+*css(t,boot) = min(css(t,boot), yss(t,boot) - psib*delta);
 kss(t+1,boot) = (1-delta)*kss(t,boot) + yss(t,boot) - css(t,boot);
 
 
@@ -341,7 +342,7 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - predict*sum(k, psigmazsv(k)*LOG(1.e-5+psigmazsv(k)))
                                   - predict*sum((k,t), perrzsv(t,k)*log(1.e-5+perrzsv(t,k)))
                                   - sum((k,t), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
-                                  - sum((k,t,nz), perreulerneer(t,k)*log(1.e-5+perreulerneer(t,k)))
+                                  - sum((k,t), perreulerneer(t,k)*log(1.e-5+perreulerneer(t,k)))
 ;
 
 eqvf_deriv(t)..
@@ -587,7 +588,7 @@ $ontext
 coeffe.l(ncoeff)=coeffs(ncoeff);
 $offtext
 
-predict = 0.01;
+predict = 0.1;
 
 erreulersv("1")         = -0.2*sum(t,cs(t))/card(t);
 erreulersv("3")         = 0.2*sum(t,cs(t))/card(t);
@@ -653,9 +654,10 @@ display deltaem, deltaestd, deltaemse ;
 display rhozem, rhozestd, rhozemse ;
 display sigmazem, sigmazestd, sigmazemse ;
 
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
+
 display deltaeboot, alphakeboot, rhozeboot, sigmazeboot, modelboot, elapsed   ;
 
-scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 Parameters
 res(boot,*);
@@ -693,7 +695,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'res-vf-solution-fix-gamma.gdx',res,res_table,elapsed ;
+execute_unload 'res-vf-solution-old-gme-old-data.gdx',res,res_table,elapsed ;
 *$libinclude xlexport res res.xlsx res!a1:h101
 
 
