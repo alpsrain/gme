@@ -1,4 +1,4 @@
-display sigmar_true,alphar1,alphar1,a_true;
+scalar starttime; starttime = jnow;
 
 
 $ontext
@@ -624,6 +624,40 @@ eqpasv
 betasv("1")   = 0.97 ;
 betasv("2")   = 0.98 ;
 betasv("3")   = 0.99 ;
+alphaksv("1")   = 0.2 ;
+alphaksv("2")   = 0.36 ;
+alphaksv("3")   = 0.5 ;
+gammasv("1")    = 0.1 ;
+gammasv("2")    = 0.75 ;
+gammasv("3")    = 1.5 ;
+deltasv("1")    = 0.001 ;
+deltasv("2")    = 0.025 ;
+deltasv("3")    = 0.05 ;
+rhozsv("1")    = 0 ;
+rhozsv("2")    = 0 ;
+rhozsv("3")    = 0 ;
+sigmazsv("1")   = 0.001 ;
+sigmazsv("2")   = 0.04 ;
+sigmazsv("3")   = 0.08 ;
+sigmarsv("1")   = 0.0001 ;
+sigmarsv("2")   = 0.003 ;
+sigmarsv("3")   = 0.006;
+alphar1sv("1")   = 1.001 ;
+alphar1sv("2")   = 1.012 ;
+alphar1sv("3")   = 1.025;
+alphar2sv("1")   = 0.001 ;
+alphar2sv("2")   = 0.003;
+alphar2sv("3")   = 0.005;
+asv("1")   = 0 ;
+asv("2")   = 0.1;
+asv("3")   = 0.2;
+*$offtext
+
+
+$ontext
+betasv("1")   = 0.97 ;
+betasv("2")   = 0.98 ;
+betasv("3")   = 0.99 ;
 alphaksv("1")   = 0.1 ;
 alphaksv("2")   = 0.25 ;
 alphaksv("3")   = 0.5 ;
@@ -651,28 +685,6 @@ alphar2sv("3")   = 0.015;
 asv("1")   = 0 ;
 asv("2")   = 0.5 ;
 asv("3")   = 1 ;
-
-*$offtext
-
-$ontext
-betasv("1")   = 0.98 ;
-betasv("2")   = 0.99 ;
-betasv("3")   = 0.999 ;
-alphaksv("1")   = 0.2 ;
-alphaksv("2")   = 0.5 ;
-alphaksv("3")   = 0.8 ;
-gammasv("1")    = 0.1 ;
-gammasv("2")    = 3 ;
-gammasv("3")    = 6;
-deltasv("1")    = 0.001 ;
-deltasv("2")    = 0.05 ;
-deltasv("3")    = 0.10 ;
-rhozsv("1")    = 0.5 ;
-rhozsv("2")    = 0.75 ;
-rhozsv("3")    = 0.99 ;
-sigmazsv("1")   = 0.001 ;
-sigmazsv("2")   = 0.1 ;
-sigmazsv("3")   = 0.2;
 $offtext
 
 z0e(nzb) = err0(nzb) * sigmazsv("2");
@@ -894,6 +906,7 @@ modelboot(boot) = estimation.modelstat ;
 
 ) ;
 
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 parameters
 alphakem
@@ -1080,7 +1093,7 @@ res_table("a","S.D.")=aestd;
 res_table("a","Bias")=abias;
 res_table("a","MSE")=aemse;
 
-execute_unload 'rbc-borrowing-kcost-alex.gdx',res,res_table;
+execute_unload 'rbc-borrowing-kcost-alex.gdx',res,res_table,elapsed;
 
 
 

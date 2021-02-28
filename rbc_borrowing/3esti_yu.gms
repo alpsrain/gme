@@ -1,3 +1,5 @@
+scalar starttime; starttime = jnow;
+
 $ontext
 *----------------
 * data simulation
@@ -638,8 +640,8 @@ alphar2sv("1")   = 0.001 ;
 alphar2sv("2")   = 0.003;
 alphar2sv("3")   = 0.005;
 asv("1")   = 0 ;
-asv("2")   = 0.5;
-asv("3")   = 1;
+asv("2")   = 0.1;
+asv("3")   = 0.2;
 *$offtext
 
 $ontext
@@ -883,7 +885,7 @@ modelboot(boot) = estimation.solvestat ;
 
 ) ;
 
-
+scalar elapsed; elapsed = (jnow - starttime)*24*3600;
 
 parameters
 alphakem
@@ -1071,7 +1073,7 @@ res_table("a","Bias")=abias;
 res_table("a","MSE")=aemse;
 
 
-execute_unload 'rbc-borrowing-kcost-true-yu.gdx',res,res_table;
+execute_unload 'rbc-borrowing-kcost-true-yu.gdx',res,res_table,elapsed;
 
 
 
