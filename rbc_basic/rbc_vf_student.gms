@@ -12,7 +12,7 @@ delta_true=0.025;
 rho_true=0.85;
 sigma_true=0.04;
 
-Set t    / 1*100/;
+Set t    / 1*50/;
 Set boot  /1*100/;
 
 Parameters
@@ -84,28 +84,66 @@ z0exp(nz)  = z0expmin + (z0expmax-z0expmin)/(card(nz)-1) * (ord(nz)-1) ;
 *--------------------------------------------------
 * value function coefficients from MaliarJudd2016
 *--------------------------------------------------
-Sets ncoeff number of coefficients   /1*21/;
+Sets ncoeff number of coefficients   /1*15/;
 Parameters
 coeffs(ncoeff)
 vfs(t)
 ;
 
 * no binding constraint
-coeffs("1")=-2064.17757419394;
-coeffs("2")=1040.49735048140;
-coeffs("3")=640.142526058677 ;
-coeffs("4")=-673.650781405834 ;
-coeffs("5")=-433.831657068556 ;
-coeffs("6")=-333.567211847312;
-coeffs("7")=257.758002870836 ;
-coeffs("8")=178.136199175614 ;
-coeffs("9")=128.837555331704 ;
-coeffs("10")=114.890261486110 ;
-coeffs("11")=-42.2210833814525;
-coeffs("12")=-30.8388594819872 ;
-coeffs("13")=-23.0860115802875 ;
-coeffs("14")=-18.0724899668120  ;
-coeffs("15")=-17.8573192761438 ;
+*vfi generated from normal distribution
+*coeffs("1")=-2064.17757419394;
+*coeffs("2")=1040.49735048140;
+*coeffs("3")=640.142526058677 ;
+*coeffs("4")=-673.650781405834 ;
+*coeffs("5")=-433.831657068556 ;
+*coeffs("6")=-333.567211847312;
+*coeffs("7")=257.758002870836 ;
+*coeffs("8")=178.136199175614 ;
+*coeffs("9")=128.837555331704 ;
+*coeffs("10")=114.890261486110 ;
+*coeffs("11")=-42.2210833814525;
+*coeffs("12")=-30.8388594819872 ;
+*coeffs("13")=-23.0860115802875 ;
+*coeffs("14")=-18.0724899668120  ;
+*coeffs("15")=-17.8573192761438 ;
+
+*vfi generated from student distribution DF=5
+$ontext
+coeffs("1")=-289.367575181736;
+coeffs("2")=1177.281640085237;
+coeffs("2")=190.7596181972207;
+coeffs("2")=1-90.1286322632212;
+coeffs("2")=1-23.3566541368105;
+coeffs("2")=1-42.6384045054407;
+coeffs("2")=130.2749833630188;
+coeffs("2")=1-0.0246989118139763;
+coeffs("2")=14.63164343485162;
+coeffs("2")=115.9192533487811;
+coeffs("2")=1-4.76531713063243;
+coeffs("2")=10.835535611037181;
+coeffs("2")=10.461670902473579;
+coeffs("2")=1-0.960027369360845;
+coeffs("2")=1-2.68579771199663;
+$offtext
+
+*vfi generated from student distribution DF=5    
+coeffs("1")=-612.926651372242;
+coeffs("2")=399.442245310240;
+coeffs("3")=230.429574089884;
+coeffs("4")=-224.265805556031;
+coeffs("5")=-99.5900979293190;
+coeffs("6")=-114.693218406709;
+coeffs("7")=79.0101578294803;
+coeffs("8")=22.1105963226933;
+coeffs("9")=24.8081169115040;
+coeffs("10")=41.3267170334713;
+coeffs("11")=-12.5841416341368;
+coeffs("12")=-1.95878965415444;
+coeffs("13")=-1.40781317193545;
+coeffs("14")=-4.04450362941085;
+coeffs("15")=-6.73099529305287;
+
 
 *---------------------------
 * data simulation
@@ -136,16 +174,17 @@ function randstudentt  /stolib.dstudentt /;
 set i /i1*i20/
 set j /randstudentt/
 parameter randx(i,j)    numbers from distributions;
-randx(i,"randstudentt")=randstudentt(5);
+randx(i,"randstudentt")=randstudentt(10);
 display randx;
 
 loop(boot,
 loop(t$(ord(t) LT card(t)),
-zss(t+1,boot) = rho*zss(t,boot) + 0.04*randstudentt(5) ;
+zss(t+1,boot) = rho*zss(t,boot) + 0.04*0.04*randstudentt(10) ;
 ) ;
 *execseed = 1 + gmillisec(jnow);
 ) ;
 
+$ontext
 parameters
 meanzss(boot)
 stdzss(boot) ;
@@ -156,6 +195,7 @@ zss(t,boot) = zss(t,boot) - meanzss(boot) ;
 meanzss(boot) = sum(t, zss(t,boot))/card(t) ;
 stdzss(boot) = (sum(t, (zss(t,boot)-meanzss(boot))*(zss(t,boot)-meanzss(boot)))/card(t) )**0.5 ;
 display meanzss, stdzss ;
+$offtext
 
 kss(t,boot) = kbar;
 
@@ -351,8 +391,8 @@ eqentropie..     entropie =e=     - predict*sum(k, palphaksv(k)*LOG(1.e-5+palpha
                                   - predict*sum(k, psigmazsv(k)*LOG(1.e-5+psigmazsv(k)))
                                   - predict*sum(k, pbetasv(k)*LOG(1.e-5+pbetasv(k)))
                                   - predict*sum((k,t), perrzsv(t,k)*log(1.e-5+perrzsv(t,k)))
-                                  - 100*sum((k,t), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
-                                  - 100*sum((k,t), perreulerneer(t,k)*log(1.e-5+perreulerneer(t,k)))
+                                  - 1*sum((k,t), perreulerer(t,k)*log(1.e-5+perreulerer(t,k)))
+                                  - 1*sum((k,t), perreulerneer(t,k)*log(1.e-5+perreulerneer(t,k)))
 ;
 
 eqvf_deriv(t)..
@@ -485,7 +525,7 @@ eqeulerneerm
 
 
 *initiate chebyshev coefficient for estimation
-$ontext
+*$ontext
 betasv("1")   = 0.98 ;
 betasv("2")   = 0.99 ;
 betasv("3")   = 0.999 ;
@@ -504,9 +544,9 @@ rhozsv("3")    = 0.99 ;
 sigmazsv("1")   = 0.001 ;
 sigmazsv("2")   = 0.04 ;
 sigmazsv("3")   = 0.08;
-$offtext
+*$offtext
 
-*$ontext
+$ontext
 betasv("1")   = 0.98 ;
 betasv("2")   = 0.99 ;
 betasv("3")   = 0.999 ;
@@ -525,7 +565,7 @@ rhozsv("3")    = 0.99 ;
 sigmazsv("1")   = 0.001 ;
 sigmazsv("2")   = 0.1 ;
 sigmazsv("3")   = 0.2;
-*$offtext
+$offtext
 
 
 z0(nz) = err0(nz)*sigmazsv("3")   ;
@@ -771,7 +811,7 @@ res_table("sigma","S.D.")=sigmazestd;
 res_table("sigma","Bias")=sigmazebias;
 res_table("sigma","MSE")=sigmazemse;
 
-execute_unload 'rbc-vf-student-other.gdx',res,res_table,elapsed;
+execute_unload 'rbc-vf-student.gdx',res,res_table,elapsed;
 
 
 
