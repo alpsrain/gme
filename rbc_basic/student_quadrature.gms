@@ -26,7 +26,7 @@ f_normal(nz)
 *prob("6") = 0.344642334932019;prob("7") = 0.135483702980268;prob("8") = 0.0191115805007703;prob("9") = 0.000758070934312218;prob("10") = 4.31065263071829e-06;
 
 * ------------------------
-* Gauss-Hermite quadrature 
+* Gauss-Hermite quadrature
 * ------------------------
 *err0("1")= -2.020182870456086; err0("2")= -0.9585724646138185; err0("3")= 0; err0("4")= 0.9585724646138185; err0("5")= 2.020182870456086;
 *prob("1")=0.01995324205904591;prob("2")=0.3936193231522412; prob("3")=0.9453087204829419;prob("4")=0.3936193231522412 ;prob("5")=0.01995324205904591 ;
@@ -40,11 +40,14 @@ prob("6") = 0.6108626337353258;prob("7") = 0.2401386110823147; prob("8") = 0.033
 
 * student distribution with DF=5
 * pdf student distribution with DF=5 and normal distribution N(0,1)
-f_student(nz)=4*2/(pi*5**0.5*3)*(1+err0(nz)*err0(nz)/5)**(-(5+1)/2);
+*DF=5
+*f_student(nz)=4*2/(pi*5**0.5*3)*(1+err0(nz)*err0(nz)/5)**(-(5+1)/2);
+*DF=10
+f_student(nz)=9*7*5*3/(2*10**0.5*8*6*4*2)*(1+err0(nz)*err0(nz)/10)**(-(10+1)/2);
 f_normal(nz)=1/((2*pi)**0.5) * exp(-err0(nz)*err0(nz)/2);
 weight(nz)=f_student(nz)/f_normal(nz);
 prob_student(nz)=weight(nz)*prob(nz);
 
 display weight, prob, prob_student;
 
-execute_unload 'student_quadrature.gdx',prob_student ;  
+execute_unload 'student_quadrature.gdx',prob_student ;
